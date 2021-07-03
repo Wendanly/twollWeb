@@ -1,3 +1,5 @@
+这是一个普通的前端项目
+
 # project-manage
 
 ## Project setup
