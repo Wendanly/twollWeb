@@ -64,6 +64,7 @@ export default {
       publicKey: ""
     };
   },
+  
   created() {
     this.getValidateCode();
     this.getRsaPub();
