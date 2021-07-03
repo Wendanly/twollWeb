@@ -48,11 +48,13 @@ body,
 }
 
 //表格样式修改
+//表头高度，背景色
 .el-table th {
     background: #fafafa;
     padding: 6px 0;
 }
 
+//内容高度
 .el-table td {
     padding: 8px 0;
 }
@@ -63,6 +65,7 @@ body,
     padding: 20px;
     background: #ffffff;
     box-sizing: border-box;
+    overflow: auto;
 
     //搜索
     .search {

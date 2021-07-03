@@ -52,7 +52,7 @@
               v-for="(item,index) in btn"
               :key="index"
               :disabled="getStatus(scope,index)"
-              @click="goTo(scope)"
+              @click="goTo(scope,index)"
             >{{index}}</el-button>
           </template>
         </el-table-column>
@@ -95,8 +95,7 @@ export default {
         发布: ["10", "11"],
         删除: ["00", "20", "30", "31"],
         详情: ["00", "10", "20", "30", "11", "21", "31"]
-      },
-      line: "下线"
+      }
     };
   },
   created() {
