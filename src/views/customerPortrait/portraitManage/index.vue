@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="search">
       <el-input
-        @keyup.enter.native="getSceneList('search')"
+        @keyup.enter.native="getList('search')"
         class="fuzzy-query"
         size="mini"
         v-model="serarchCondition.eikon_name"
@@ -10,7 +10,7 @@
         clearable
         :maxlength="maxlength"
       ></el-input>
-      <el-button type="primary" @click="getSceneList('search')" size="mini">查询</el-button>
+      <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
       <div class="btn-group">
         <el-button class="margin-r" type="primary" size="mini" @click="add">新增</el-button>
       </div>
@@ -27,7 +27,7 @@
         <el-table-column prop="EIKON_STATUS_NAME" label="画像状态"></el-table-column>
         <el-table-column prop="IOP_TYPE_NAME" label="建设主体"></el-table-column>
         <el-table-column prop="RELEASE_NAME" label="发布状态"></el-table-column>
-        <el-table-column prop="REMARK" label="备注"></el-table-column>
+        <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
         <el-table-column prop="OPER_ID" label="操作人"></el-table-column>
         <el-table-column prop="OPER_DATE" label="操作时间"></el-table-column>
         <el-table-column label="操作" width="320">
@@ -66,14 +66,19 @@
       ></MyPagination>
     </div>
     <add ref="add"></add>
+    <version ref="version"></version>
+    <publish ref="publish"></publish>
   </div>
 </template>
 <script>
-import { GetEikonList } from "@/api/portraitManage.js";
-import add from "@/views/customerPortrait/scenManage/add";
+import { GetEikonList, DoUpdateAsEikonStatus,DoDelAsEikonInfo } from "@/api/portraitManage.js";
 export default {
   name: "portraitManage",
-  components: { add },
+  components: {
+    add: () => import("./add"),
+    version: () => import("./version"),
+    publish: () => import("./publish")
+  },
   data() {
     return {
       maxlength: 50,
@@ -91,15 +96,19 @@ export default {
         停用: ["10", "11"],
         编辑: ["00", "10", "11"],
         查看: ["00", "10", "20", "30", "11", "21", "31"],
-        规则: ["00", "10"],
+        版本: ["00", "10"],
         发布: ["10", "11"],
-        删除: ["00", "20", "30", "31"],
-        详情: ["00", "10", "20", "30", "11", "21", "31"]
+        删除: ["00", "20", "30", "31"]
       }
     };
   },
+  provide() {
+    return {
+      getParentList: this.getList
+    };
+  },
   created() {
-    this.getEikonList();
+    this.getList();
   },
   methods: {
     getStatus(scope, name) {
@@ -114,29 +123,51 @@ export default {
       if (name == "下线") {
         return status == "10" || status == "11" ? false : true;
       }
-      //
-
       return this.btn[name].indexOf(status) > -1 ? false : true;
     },
     goTo(scope, name) {
-      console.log(scope.row, name);
+      let rowInfo = scope.row;
+      if (name == "编辑") {
+        this.edit(rowInfo);
+      } else if (name == "上线") {
+        this.updateStatus(scope, "1", name);
+      } else if (name == "下线") {
+        this.updateStatus(scope, "3", name);
+      } else if (name == "停用") {
+        this.updateStatus(scope, "2", name);
+      } else if (name == "版本") {
+        this.$refs.version.open(rowInfo);
+      } else if (name == "发布") {
+        this.$refs.publish.open(rowInfo);
+      } else if (name == "删除") {
+        this.del(rowInfo);
+      }
     },
     add() {
-      // console.log(this.$options.data().serarchCondition);
       this.$refs.add.open("add");
     },
     edit(rowInfo) {
-      this.$refs.add.open("edit", rowInfo.row);
+      this.$refs.add.open("edit", rowInfo);
     },
-    updateStatus(scope) {
-      DoSaveAsSceneStatusInfo({
-        scene_id: scope.row.SCENE_ID,
-        status: scope.row.STATUS
-      }).then(res => {
-        this.getSceneList();
-      });
+    updateStatus(scope, status, name) {
+      this.$confirm(`[${scope.row.EIKON_ID}]该画像确定是否${name}？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        type: "warning"
+      })
+        .then(() => {
+          DoUpdateAsEikonStatus({
+            eikon_id: scope.row.EIKON_ID,
+            status
+          }).then(res => {
+            this.getList();
+          });
+        })
+        .catch(() => {});
     },
-    del(scoped) {
+    del(rowInfo) {
       this.$confirm("确定删除吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -145,18 +176,17 @@ export default {
         type: "warning"
       })
         .then(() => {
-          DoDelAsSceneInfo({
-            scene_id: scoped.row.SCENE_ID
+          DoDelAsEikonInfo({
+            eikon_id: rowInfo.EIKON_ID
           })
             .then(res => {
-              this.getSceneList();
+              this.getList();
             })
             .catch(err => {});
         })
         .catch(() => {});
     },
-    getEikonList(from) {
-      //清空子节点
+    getList(from) {
       if (from == "search") {
         this.page = 1;
         this.rows = this.$PAGE_SIZES[0];
@@ -171,48 +201,6 @@ export default {
           this.tableLoading = false;
           if (res.SUCCESS) {
             this.tableData = res.DATA_LIST;
-            this.tableData = [
-              {
-                EIKON_ID: "00",
-                STATUS: "0",
-                IS_RELEASE: "0"
-              },
-              {
-                EIKON_ID: "11",
-                STATUS: "1",
-                IS_RELEASE: "0"
-              },
-              {
-                EIKON_ID: "22",
-                STATUS: "2",
-                IS_RELEASE: "0"
-              },
-              {
-                EIKON_ID: "33",
-                STATUS: "3",
-                IS_RELEASE: "0"
-              },
-              {
-                EIKON_ID: "111",
-                STATUS: "1",
-                IS_RELEASE: "1"
-              },
-              {
-                EIKON_ID: "222",
-                STATUS: "2",
-                IS_RELEASE: "1"
-              },
-              {
-                EIKON_ID: "333",
-                STATUS: "3",
-                IS_RELEASE: "1"
-              },
-              {
-                EIKON_ID: "2222222",
-                STATUS: "0",
-                IS_RELEASE: "1"
-              }
-            ];
             this.total = res.TOTAL;
           } else {
             this.$message.warning(res.MESSAGE);
@@ -225,12 +213,12 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.rows = val;
-      this.getSceneList();
+      this.getList();
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.page = val;
-      this.getSceneList();
+      this.getList();
     }
   }
 };

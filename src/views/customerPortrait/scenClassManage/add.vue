@@ -57,6 +57,7 @@ export default {
     };
   },
   created() {},
+  inject: ["getParentList"],
   methods: {
     open(param, rowInfo) {
       console.log(rowInfo);
@@ -98,7 +99,7 @@ export default {
               this.loading = false;
               if (res.SUCCESS) {
                 this.close();
-                this.$parent.getSceneClassList();
+                this.getParentList();
                 this.$message.success(res.MESSAGE);
               } else {
                 this.$message.warning(res.MESSAGE);

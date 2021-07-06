@@ -5,9 +5,9 @@
         class="fuzzy-query"
         size="mini"
         v-model="serarchCondition.iop_type"
-        placeholder="分析主体"
+        placeholder="建设主体"
         clearable
-        @change="getSceneList('search')"
+        @change="getList('search')"
       >
         <el-option
           v-for="(item,index) in iopTypeList"
@@ -22,7 +22,7 @@
         v-model="serarchCondition.status"
         placeholder="场景状态"
         clearable
-        @change="getSceneList('search')"
+        @change="getList('search')"
       >
         <el-option
           v-for="(item,index) in sceneStatusList"
@@ -32,7 +32,7 @@
         ></el-option>
       </el-select>
       <el-input
-        @keyup.enter.native="getSceneList('search')"
+        @keyup.enter.native="getList('search')"
         class="fuzzy-query"
         size="mini"
         v-model="serarchCondition.scene_id"
@@ -41,7 +41,7 @@
         :maxlength="maxlength"
       ></el-input>
       <el-input
-        @keyup.enter.native="getSceneList('search')"
+        @keyup.enter.native="getList('search')"
         class="fuzzy-query"
         size="mini"
         v-model="serarchCondition.scene_name"
@@ -49,7 +49,7 @@
         clearable
         :maxlength="maxlength"
       ></el-input>
-      <el-button type="primary" @click="getSceneList('search')" size="mini">查询</el-button>
+      <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
       <div class="btn-group">
         <el-button class="margin-r" type="primary" size="mini" @click="add">新增</el-button>
       </div>
@@ -120,8 +120,13 @@ export default {
       }
     };
   },
+  provide() {
+    return {
+      getParentList: this.getList
+    };
+  },
   created() {
-    this.getSceneList();
+    this.getList();
     GetDicInfo({
       dic_type: "IOP_TYPE#SCENE_STATUS"
     })
@@ -174,7 +179,7 @@ export default {
             scene_id: scope.row.SCENE_ID,
             status: tmpStatus
           }).then(res => {
-            this.getSceneList();
+            this.getList();
           });
         })
         .catch(() => {});
@@ -192,13 +197,13 @@ export default {
             scene_id: scoped.row.SCENE_ID
           })
             .then(res => {
-              this.getSceneList();
+              this.getList();
             })
             .catch(err => {});
         })
         .catch(() => {});
     },
-    getSceneList(from) {
+    getList(from) {
       //清空子节点
       if (from == "search") {
         this.page = 1;
@@ -226,12 +231,12 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.rows = val;
-      this.getSceneList();
+      this.getList();
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.page = val;
-      this.getSceneList();
+      this.getList();
     }
   }
 };

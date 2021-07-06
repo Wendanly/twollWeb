@@ -36,6 +36,11 @@ const routes = [{
         name: 'portraitManage',
         component: () => import('@/views/customerPortrait/portraitManage')
       },
+      {
+        path: '/portraitManageAdd',
+        name: 'portraitManageAdd',
+        component: () => import('@/views/customerPortrait/portraitManage/add')
+      },
     ],
   },
 
@@ -44,6 +49,7 @@ const routes = [{
 
 const router = new VueRouter({
   mode: 'history',
+  base:'/twoll_web/',
   routes
 })
 

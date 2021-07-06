@@ -14,7 +14,6 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     store.state.userInfo && store.state.userInfo.Token ? config.headers["Authorization"] = 'Bearer ' + store.state.userInfo.Token : ''; // 请求头中添加token
-    console.log(config);
     return config;
   },
   error => {

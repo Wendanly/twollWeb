@@ -3,7 +3,7 @@
     :destroy-on-close="true"
     :title="title"
     :visible.sync="dialogFormVisible"
-    width="400px"
+    width="600px"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :before-close="close"
@@ -12,66 +12,102 @@
       <el-form
         v-loading="formLoading"
         label-position="center"
-        label-width="120px"
+        label-width="100px"
         :model="formData"
         :rules="formRules"
         ref="formRules"
       >
-        <el-form-item label="场景名称" prop="scene_name">
-          <el-input
-            size="mini"
-            placeholder="场景名称"
-            :maxlength="maxlength"
-            v-model.trim="formData.scene_name"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="一级场景分类" prop="class_id">
-          <el-select
-            @change="getSClassList2"
-            class="fuzzy-query"
-            style="width:100%"
-            size="mini"
-            v-model="formData.class_id"
-            placeholder="一级场景分类"
-          >
-            <el-option
-              v-for="(item,index) in sceneClassList"
-              :key="index"
-              :label="item.CLASS_NAME"
-              :value="item.CLASS_ID"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="二级场景分类" prop="class_id2">
-          <el-select
-            class="fuzzy-query"
-            style="width:100%"
-            size="mini"
-            v-model="formData.class_id2"
-            placeholder="二级场景分类"
-          >
-            <el-option
-              v-for="(item,index) in sceneClassList2"
-              :key="index"
-              :label="item.CLASS_NAME"
-              :value="item.CLASS_ID"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="分析对象" prop="eikon_name">
+              <el-select size="mini" v-model="formData.eikon_name" placeholder>
+                <el-option
+                  v-for="(item,index) in analyList"
+                  :key="index"
+                  :label="item.sf"
+                  :value="item.sdg"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="画像名称" prop="eikon_name">
+              <el-input
+                size="mini"
+                placeholder="画像名称"
+                :maxlength="maxlength"
+                v-model.trim="formData.eikon_name"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="周期类型" prop="eikon_name">
+              <el-select size="mini" v-model="formData.eikon_name" placeholder>
+                <el-option
+                  v-for="(item,index) in cycTypeList"
+                  :key="index"
+                  :label="item.sf"
+                  :value="item.sdg"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="有效期" prop="eikon_name">
+              <el-row>
+                <el-col :span="11">
+                  <el-date-picker
+                    value-format="yyyy-MM-dd"
+                    format="yyyy-MM-dd"
+                    size="mini"
+                    v-model="formData.start"
+                    type="date"
+                    placeholder="选择起始日期"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :span="2">
+                  <div>-</div>
+                </el-col>
+                <el-col :span="11">
+                  <el-date-picker
+                    value-format="yyyy-MM-dd"
+                    format="yyyy-MM-dd"
+                    size="mini"
+                    v-model="formData.end"
+                    type="date"
+                    placeholder="选择起始日期"
+                  ></el-date-picker>
+                </el-col>
+              </el-row>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="画像描述" prop="remark">
+              <el-input
+                size="mini"
+                placeholder="画像描述"
+                :maxlength="maxlength"
+                v-model.trim="formData.remark"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
     <div slot="footer" style="text-align: center;">
       <el-button size="mini" @click="close">取 消</el-button>
-      <el-button size="mini" type="primary" @click="doSaveAsSceneInfo" :loading="loading">保存</el-button>
+      <el-button size="mini" type="primary" @click="doSaveAsEikonInfo" :loading="loading">保存</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
-import {
-  GetSClassList,
-  GetSClassList2,
-  DoSaveAsSceneInfo
-} from "@/api/scenManage.js";
+import { DoSaveAsEikonInfo } from "@/api/portraitManage.js";
 export default {
   name: "add",
   components: {},
@@ -80,100 +116,65 @@ export default {
       dialogFormVisible: false,
       title: "新增",
       formLoading: false,
+      cycTypeList: [],
+      analyList: [],
       formData: {
-        scene_name: "",
-        class_id: "",
-        class_id2: ""
+        eikon_name: "",
+        remark: "",
+        start: "",
+        end: ""
       },
       //表单校验
       formRules: {
-        scene_name: [
+        eikon_name: [
           {
             required: true,
             message: "此为必填项！",
             trigger: ["blur"]
           }
         ],
-        class_id: [
+        remark: [
           {
             required: true,
             message: "此为必选项！",
-            trigger: ["change"]
+            trigger: ["blur"]
           }
-        ],
-        // class_id2: [
-        //   {
-        //     required: true,
-        //     message: "此为必选项！",
-        //     trigger: ["change"]
-        //   }
-        // ]
+        ]
       },
       maxlength: 50,
-      loading: false,
-      //  rows: this.$PAGE_SIZES[0],
-      sceneClassList: [],
-      sceneClassList2: []
+      loading: false
     };
   },
-  created() {},
+  inject: ["getParentList"],
+  created() {
+    console.log("created");
+  },
   methods: {
     open(param, rowInfo) {
-      console.log(JSON.stringify(this.$options.data().formData));
+      console.log(rowInfo);
       if (param == "add") {
-        this.formData.scene_id = null;
-        this.formData.scene_name = "";
-        this.formData.scene_type = "";
+        this.formData.eikon_id = null;
+        this.formData.eikon_name = "";
+        this.formData.remark = "";
         this.title = "新增";
       } else {
         this.title = "编辑";
-        this.formData.scene_id = rowInfo.SCENE_ID;
-        this.formData.scene_name = rowInfo.SCENE_NAME;
-        this.formData.scene_type = rowInfo.SCENE_TYPE_NAME;
+        this.formData.eikon_id = rowInfo.EIKON_ID;
+        this.formData.eikon_name = rowInfo.EIKON_NAME;
+        this.formData.remark = rowInfo.REMARK;
       }
-      console.log(JSON.stringify(this.$options.data().formData));
-      this.getSClassList();
       this.dialogFormVisible = true;
     },
-    getSClassList() {
-      GetSClassList({})
-        .then(res => {
-          console.log(res);
-          if (res && res.length) {
-            this.sceneClassList = res;
-            this.formData.class_id = this.sceneClassList[0].CLASS_ID;
-            this.getSClassList2(this.formData.class_id);
-          } else {
-            this.$message.warning("数据异常！");
-          }
-        })
-        .catch(err => {});
-    },
-    getSClassList2(classid) {
-      GetSClassList2({
-        per_class_id: classid
-      })
-        .then(res => {
-          console.log(res);
-          if (res && res.length) {
-            this.sceneClassList2 = res;
-            this.formData.class_id2 = this.sceneClassList[0].CLASS_ID;
-          } else {
-            this.formData.class_id2 = "";
-          }
-        })
-        .catch(err => {});
-    },
-    doSaveAsSceneInfo() {
+    doSaveAsEikonInfo() {
       this.$refs["formRules"].validate(formValid => {
         if (formValid) {
           this.loading = true;
-          DoSaveAsSceneInfo(this.formData)
+          DoSaveAsEikonInfo(this.formData)
             .then(res => {
               this.loading = false;
               if (res.SUCCESS) {
                 this.close();
-                this.$parent.getSceneClassList();
+                this.getParentList();
                 this.$message.success(res.MESSAGE);
               } else {
                 this.$message.warning(res.MESSAGE);
@@ -191,9 +192,8 @@ export default {
     },
     reset() {
       this.formData = {
-        scene_name: "",
-        class_id: "",
-        class_id2: ""
+        eikon_name: "",
+        remark: ""
       };
     }
   }
@@ -202,5 +202,10 @@ export default {
 
 <style lang="scss" scoped>
 .wrap {
+  .dia-wrap {
+    .el-select {
+      width: 100%;
+    }
+  }
 }
 </style>

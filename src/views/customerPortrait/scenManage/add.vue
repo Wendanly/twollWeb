@@ -117,10 +117,10 @@ export default {
       sceneClassList2: []
     };
   },
+  inject: ["getParentList"],
   created() {},
   methods: {
     open(param, rowInfo) {
-      console.log(JSON.stringify(this.$options.data().formData));
       if (param == "add") {
         this.formData.scene_id = null;
         this.formData.scene_name = "";
@@ -132,7 +132,6 @@ export default {
         this.formData.scene_name = rowInfo.SCENE_NAME;
         this.formData.scene_type = rowInfo.SCENE_TYPE_NAME;
       }
-      console.log(JSON.stringify(this.$options.data().formData));
       this.getSClassList();
       this.dialogFormVisible = true;
     },
@@ -184,7 +183,7 @@ export default {
               if (res.SUCCESS) {
                 this.$message.success(res.MESSAGE);
                 this.close();
-                this.$parent.getSceneList();
+                this.getParentList();
               } else {
                 this.$message.warning(res.MESSAGE);
               }

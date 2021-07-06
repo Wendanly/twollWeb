@@ -2,13 +2,13 @@
   <div class="wrap">
     <div class="search">
       <el-input
-        @keyup.enter.native="getSceneClassList('search')"
+        @keyup.enter.native="getList('search')"
         class="fuzzy-query"
         size="mini"
         v-model="class_name"
         placeholder="一级场景分类名称"
       ></el-input>
-      <el-button type="primary" @click="getSceneClassList('search')" size="mini">查询</el-button>
+      <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
       <div class="btn-group">
         <el-button class="margin-r" type="primary" size="mini" @click="add">新增</el-button>
       </div>
@@ -101,8 +101,13 @@ export default {
       childrenPage: 1
     };
   },
+  provide() {
+    return {
+      getParentList: this.getList
+    };
+  },
   created() {
-    this.getSceneClassList();
+    this.getList();
   },
   methods: {
     add() {
@@ -130,7 +135,7 @@ export default {
             class_id: scoped.row.CLASS_ID
           })
             .then(res => {
-              this.getSceneClassList();
+              this.getList();
             })
             .catch(err => {});
         })
@@ -138,7 +143,7 @@ export default {
           this.loading = false;
         });
     },
-    getSceneClassList(from) {
+    getList(from) {
       //清空子节点
       if (from == "search") {
         this.page = 1;
@@ -168,12 +173,12 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.rows = val;
-      this.getSceneClassList();
+      this.getList();
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.page = val;
-      this.getSceneClassList();
+      this.getList();
     },
     //清空子节点
     clearChildrenNode() {

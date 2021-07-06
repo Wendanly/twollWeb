@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination">
+  <div class="pagination" :class="getDirection">
     <el-pagination
       class="pagination"
       @size-change="sizeChange"
@@ -7,7 +7,7 @@
       :current-page="currentPage"
       :page-sizes="$PAGE_SIZES"
       :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
+      :layout="layoutStr"
       :total="total"
     ></el-pagination>
   </div>
@@ -28,12 +28,43 @@ export default {
     currentPage: {
       default: 1,
       type: Number
+    },
+    textAlign: {
+      default: "right",
+      type: String
+    },
+    notLayout: {
+      default: () => {
+        return [];
+      },
+      type: Array
     }
   },
   data() {
-    return {};
+    return {
+      layout: "total,sizes,prev,pager,next,jumper"
+    };
   },
   created() {},
+  computed: {
+    getDirection() {
+      if (this.textAlign == "left") {
+        return "left";
+      } else if (this.textAlign == "right") {
+        return "right";
+      } else if (this.textAlign == "center") {
+        return "center";
+      } else {
+        return "right";
+      }
+    },
+    layoutStr() {
+      let layoutList = this.layout.split(",");
+      let result = layoutList.filter(o => this.notLayout.every(j => o != j));
+      console.log(result);
+      return result.join(",");
+    }
+  },
   methods: {
     currentChange(val) {
       this.$emit("current-change", val);
@@ -47,7 +78,16 @@ export default {
 
 <style lang='scss' scoped>
 .pagination {
-  text-align: right;
+  // text-align: right;
   margin-top: 20px;
+}
+.right {
+  text-align: right;
+}
+.left {
+  text-align: left;
+}
+.center {
+  text-align: center;
 }
 </style>

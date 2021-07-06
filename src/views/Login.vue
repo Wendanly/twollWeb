@@ -65,7 +65,6 @@ export default {
     };
   },
 
-  
   created() {
     this.getValidateCode();
     this.getRsaPub();
@@ -114,6 +113,7 @@ export default {
           this.loginLoading = false;
           if (res.SUCCESS == "false") {
             this.$message.warning(res.MESSAGE);
+            this.getRsaPub();
             this.getValidateCode();
             this.setUserInfo({}); //清空
           } else {
@@ -130,6 +130,7 @@ export default {
         .catch(err => {
           this.loginLoading = false;
           this.$message.error("服务异常！");
+          this.getRsaPub();
           this.getValidateCode();
         });
     }
@@ -183,6 +184,7 @@ export default {
             align-items: center;
             .input {
               width: 155px;
+              height: 44px;
             }
             .img-wrap {
               position: relative;
