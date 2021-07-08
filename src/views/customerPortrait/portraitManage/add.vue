@@ -11,6 +11,7 @@
           :model="formData"
           :rules="formRules"
           ref="formRules"
+          :disabled="isShow"
         >
           <el-row>
             <el-col :span="24">
@@ -108,8 +109,9 @@
             <el-col :span="24">
               <el-form-item label="画像描述" prop="remark">
                 <el-input
-                  type="text"
+                  type="textarea"
                   placeholder="画像描述"
+                  :autosize="{ minRows: 2, maxRows: 6}"
                   :maxlength="200"
                   v-model.trim="formData.remark"
                 ></el-input>
@@ -118,20 +120,27 @@
           </el-row>
         </el-form>
       </div>
-      <div class="content">
+      <div class="content" style="width:100%;">
         <logicStep ref="logicStep" v-show="isNext" :frameId="frameId"></logicStep>
       </div>
       <div class="foot">
         <el-button size="mini" v-if="!isNext" @click="close">取消</el-button>
         <el-button size="mini" type="primary" v-if="isNext" @click="back">上一步</el-button>
         <el-button size="mini" type="primary" v-if="!isNext" @click="next">下一步</el-button>
-        <el-button size="mini" type="primary" v-if="isNext" @click="save">保存</el-button>
+        <el-button
+          :loading="btnLoding"
+          :disabled="isShow"
+          size="mini"
+          type="primary"
+          v-if="isNext"
+          @click="save"
+        >保存</el-button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { DoSaveAsEikonInfo } from "@/api/portraitManage.js";
+import { DoSaveAsEikonInfo, getEikonInfo } from "@/api/portraitManage.js";
 import { isNullOrEmpty, checkLogicTree, dealDateStr } from "@/libs/tools";
 import * as dfs from "date-fns";
 import { GetDicInfo } from "@/api/commonApi.js";
@@ -229,6 +238,7 @@ export default {
         }
       },
       formLoading: false,
+      btnLoding: false,
       cycTypeList: [],
       analyList: [],
       formData: {
@@ -262,13 +272,6 @@ export default {
             trigger: ["change"]
           }
         ],
-        data_cycle: [
-          {
-            required: true,
-            message: "此为必选项！",
-            trigger: ["change"]
-          }
-        ],
         remark: [
           {
             required: true,
@@ -295,30 +298,65 @@ export default {
       loading: false,
       isNext: false,
       frameId: null,
-      tempFrameId: null
+      tempFrameId: null,
+      isShow: false
     };
   },
   created() {
-    GetDicInfo({
-      dic_type: "CYCLE_TYPE#FRAME_ID"
-    })
-      .then(res => {
-        if (res.SUCCESS == "true") {
-          this.cycTypeList = res.CYCLE_TYPE;
-          this.analyList = res.FRAME_ID;
-          if (res.CYCLE_TYPE.length) {
-            this.formData.frame_id = res.FRAME_ID[0].DIM_ID;
-          }
-          if (res.FRAME_ID.length) {
-            this.formData.data_cycle = res.CYCLE_TYPE[0].DIM_ID;
-          }
-         
-        } else {
-        }
-      })
-      .catch(err => {});
+    this.eikon_id = this.$route.query.eikon_id; // getEikonInfo,
+    this.isShow = this.$route.query.isShow == "isShow" ? true : false; //为真 则查看
+    this.init();
   },
   methods: {
+    init() {
+      this.formLoading = true;
+      GetDicInfo({
+        dic_type: "CYCLE_TYPE#FRAME_ID"
+      })
+        .then(res => {
+          this.formLoading = false;
+          if (res.SUCCESS == "true") {
+            this.cycTypeList = res.CYCLE_TYPE;
+            this.analyList = res.FRAME_ID;
+            if (res.CYCLE_TYPE.length && this.eikon_id == "") {
+              this.formData.frame_id = res.FRAME_ID[0].DIM_ID;
+            }
+            if (res.FRAME_ID.length && this.eikon_id == "") {
+              this.formData.data_cycle = res.CYCLE_TYPE[0].DIM_ID;
+            }
+            if (this.eikon_id != "") {
+              this.getEikonInfo();
+            }
+          }
+        })
+        .catch(err => {
+          this.formLoading = false;
+        });
+    },
+    getEikonInfo() {
+      let _this = this;
+      this.formLoading = true;
+      getEikonInfo({
+        eikon_id: this.eikon_id
+      })
+        .then(res => {
+          this.formLoading = false;
+          if (res.SUCCESS) {
+            let tmpObj = res.DATA_INFO.RULE_INFO;
+            tmpObj = JSON.parse(tmpObj);
+            console.log(tmpObj);
+            for (let i in this.formData) {
+              this.formData[i] = tmpObj[i];
+            }
+            this.$refs.logicStep.list = JSON.parse(tmpObj.ruleJson);
+          } else {
+            this.$message.warning(res.MESSAGE);
+          }
+        })
+        .catch(err => {
+          this.formLoading = false;
+        });
+    },
     changeCycle(val) {
       if (val == "1") {
         this.cycleType = true;
@@ -327,7 +365,7 @@ export default {
       }
     },
     close() {
-      this.$router.g(-1);
+      this.$router.go(-1);
     },
     back() {
       this.isNext = false;
@@ -409,10 +447,10 @@ export default {
       this.doSaveAsEikonInfo(temp);
     },
     doSaveAsEikonInfo(param) {
-      this.loading = true;
+      this.btnLoding = true;
       DoSaveAsEikonInfo(param)
         .then(res => {
-          this.loading = false;
+          this.btnLoding = false;
           if (res.SUCCESS) {
             this.close();
             this.$message.success(res.MESSAGE);
@@ -421,17 +459,8 @@ export default {
           }
         })
         .catch(err => {
-          this.loading = false;
+          this.btnLoding = false;
         });
-    },
-    close() {
-      this.reset();
-    },
-    reset() {
-      this.formData = {
-        eikon_name: "",
-        remark: ""
-      };
     }
   }
 };

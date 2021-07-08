@@ -130,24 +130,42 @@ export const checkLogicTree = (TreeObj, result) => {
     checkLogicTree(TreeObj.children, result);
   }
 }
+
 //大写带下划线转驼峰，如：REG_NAME 结果为：regName
-export const transHump = list => {
-  list.map(o => {
-    for (let i in o) {
-      let key = '';
-      let tmp = i.split('_');
-      let lowcaseList = [];
-      tmp.map(m =>
-        lowcaseList.push(m.toLowerCase()));
-      if (lowcaseList.length > 1) {
-        for (let i = 1, len = lowcaseList.length; i < len; i++) {
-          lowcaseList[i] = lowcaseList[i].slice(0, 1).toUpperCase() + lowcaseList[i].slice(1)
-        }
+class Hump {
+  constructor(list) {
+    this.list = list;
+  }
+  transHump() {
+    let resultList = [];
+    this.list.map(o => {
+      let tmpObj = {};
+      for (let i in o) {
+        let key = this.toHump(i);
+        tmpObj[key] = o[i];
       }
-      key = lowcaseList.join('');
-      o[key] = o[i];
+      resultList.push(tmpObj);
+    });
+    // console.log(resultList);
+    return resultList;
+  }
+  toHump(i) {
+    /**
+     * 功能：大写带下划线转驼峰，如：REG_NAME 结果为：regName
+     */
+    let tmp = i.split('_');
+    let lowcaseList = [];
+    tmp.map(m => lowcaseList.push(m.toLowerCase()));
+    if (lowcaseList.length > 1) {
+      lowcaseList.map(n => n = n.slice(0, 1).toUpperCase() + n.slice(1));
+      for (let i = 1, len = lowcaseList.length; i < len; i++) {
+        lowcaseList[i] = lowcaseList[i].slice(0, 1).toUpperCase() + lowcaseList[i].slice(1)
+      }
     }
-  });
-  // console.log(list);
-  return list;
+    return lowcaseList.join('');
+  }
+}
+
+export const transHump = list => {
+  return new Hump(list).transHump();
 }

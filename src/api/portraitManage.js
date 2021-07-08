@@ -34,6 +34,13 @@ export const DoDelAsEikonInfo = data => {
 export const getEdcAttrTree = data => {
   return request('POST', 'eikon/getEdcAttrTree', data);
 }
+//保存
 export const getEdcAttrList = data => {
   return request('POST', 'eikon/getEdcAttrList', data);
+}
+export const getDimValueById = data => {
+  return request('POST', 'eikon/getDimValueById', data);
+}
+export const getEikonInfo = data => {
+  return request('POST', 'eikon/getEikonInfo', data);
 }

@@ -52,7 +52,14 @@ module.exports = {
 
   // 调整内部的 webpack 配置。
   // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli/webpack.md
-  chainWebpack: () => {},
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title = '标签两级互动平台'
+        return args
+      })
+  },
   configureWebpack: () => {},
 
   // CSS 相关选项
@@ -88,8 +95,8 @@ module.exports = {
     // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli/cli-service.md#配置代理
     proxy: {
       '/twoll/api': {
-        //  target: 'http://192.168.1.66:18581',
-        target: 'http://172.32.148.70:18581/',
+        target: 'http://192.168.1.66:18581',
+        // target: 'http://172.32.148.70:18581/',
         changeOrigin: true,
         secure: false,
         // ws: true,

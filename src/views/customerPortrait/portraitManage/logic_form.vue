@@ -233,13 +233,11 @@
 
 <script>
 import { LOAD_ROOT_OPTIONS, lodash } from "@riophae/vue-treeselect";
-// import {
-//     getDimValueById
-// } from "@/api/cluster";
+import { getDimValueById } from "@/api/portraitManage.js";
 import * as _ from "lodash";
 
 import { symbolListObj, functionRules } from "@/libs/util";
-import { isNullOrEmpty } from "@/libs/tools";
+import { isNullOrEmpty, transHump } from "@/libs/tools";
 import dimLevelSel from "./dimLevelSel";
 
 export default {
@@ -359,11 +357,11 @@ export default {
         this.father.type = "A";
         // 获取维值下拉
         getDimValueById({
-          dimLevelId: data.dimLevelId,
+          dim_level_id: data.dimLevelId,
           type: "all"
         }).then(res => {
-          if (!res.data.flag) {
-            this.contentList = res.data.list;
+          if (res.DATA_LIST) {
+            this.contentList = transHump(res.DATA_LIST);
           } else {
             this.$set(this.father, "dimLevelExcess", true);
             this.$set(this.father, "dimLevelExcessList", []);
@@ -418,6 +416,8 @@ export default {
     }
   },
   mounted() {
+    console.log("mounted");
+    let _this = this;
     if (this.father == null) return;
     this.queryParam.symbol = this.father.symbol;
     this.queryParam.expressionVal = this.father.expressionVal;
@@ -435,32 +435,32 @@ export default {
     // 获取维值下拉框
     if (this.father.operand && !isNullOrEmpty(this.father.operand.dimLevelId)) {
       getDimValueById({
-        dimLevelId: this.father.operand.dimLevelId,
+        dim_level_id: this.father.operand.dimLevelId,
         type: "all"
       }).then(res => {
-        if (!res.data.flag) {
-          this.contentList = res.data.list;
+        if (res.DATA_LIST) {
+          _this.contentList = transHump(res.DATA_LIST);
           let ids = [];
-          for (let i = 0; i < this.contentList.length; i++) {
-            ids.push(this.contentList[i].dimValue);
+          for (let i = 0; i < _this.contentList.length; i++) {
+            ids.push(_this.contentList[i].dimValue);
           }
-          var filterVal = this.father.expressionVal.filter(function(v) {
+          var filterVal = _this.father.expressionVal.filter(function(v) {
             return ids.indexOf(v) > -1;
           });
-          this.queryParam.expressionVal = filterVal;
+          _this.queryParam.expressionVal = filterVal;
           this.$set(this.father, "expressionVal", filterVal);
           this.$set(this.father, "dimLevelExcess", false);
           this.$set(this.father, "dimLevelExcessList", null);
         } else {
-          if (this.father.dimLevelExcess == false) {
-            this.father.expressionVal = undefined;
+          if (_this.father.dimLevelExcess == false) {
+            _this.father.expressionVal = undefined;
           }
-          this.$set(this.father, "dimLevelExcess", true);
-          this.contentList =
-            this.father.dimLevelExcessList == null
+          _this.$set(this.father, "dimLevelExcess", true);
+          _this.contentList =
+            _this.father.dimLevelExcessList == null
               ? []
               : this.father.dimLevelExcessList;
-          this.queryParam.expressionVal = this.father.expressionVal;
+          _this.queryParam.expressionVal = _this.father.expressionVal;
         }
       });
     }

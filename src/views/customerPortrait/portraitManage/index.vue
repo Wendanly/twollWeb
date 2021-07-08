@@ -143,21 +143,24 @@ export default {
         this.$refs.publish.open(rowInfo);
       } else if (name == "删除") {
         this.del(rowInfo);
+      } else if (name == "查看") {
+        this.edit(rowInfo, "isShow");
       }
     },
     add() {
       this.$router.push({
         path: "/portraitManageAdd",
         query: {
-          eikon_id: undefined
+          eikon_id: ""
         }
       });
     },
-    edit(rowInfo) {
+    edit(rowInfo, flag) {
       this.$router.push({
         path: "/portraitManageAdd",
         query: {
-          eikon_id: rowInfo.EIKON_ID
+          eikon_id: rowInfo.EIKON_ID,
+          isShow: flag == "isShow" ? "isShow" : ""
         }
       });
       // this.$refs.add.open("edit", rowInfo);
