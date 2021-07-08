@@ -29,3 +29,11 @@ export const DoUpdateAsReleaseInfo = data => {
 export const DoDelAsEikonInfo = data => {
   return request('POST', 'eikon/doDelAsEikonInfo', data);
 }
+
+//画像管理--新增相关
+export const getEdcAttrTree = data => {
+  return request('POST', 'eikon/getEdcAttrTree', data);
+}
+export const getEdcAttrList = data => {
+  return request('POST', 'eikon/getEdcAttrList', data);
+}

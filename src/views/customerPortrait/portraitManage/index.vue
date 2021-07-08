@@ -65,17 +65,19 @@
         :total="total"
       ></MyPagination>
     </div>
-    <add ref="add"></add>
     <version ref="version"></version>
     <publish ref="publish"></publish>
   </div>
 </template>
 <script>
-import { GetEikonList, DoUpdateAsEikonStatus,DoDelAsEikonInfo } from "@/api/portraitManage.js";
+import {
+  GetEikonList,
+  DoUpdateAsEikonStatus,
+  DoDelAsEikonInfo
+} from "@/api/portraitManage.js";
 export default {
   name: "portraitManage",
   components: {
-    add: () => import("./add"),
     version: () => import("./version"),
     publish: () => import("./publish")
   },
@@ -144,10 +146,21 @@ export default {
       }
     },
     add() {
-      this.$refs.add.open("add");
+      this.$router.push({
+        path: "/portraitManageAdd",
+        query: {
+          eikon_id: undefined
+        }
+      });
     },
     edit(rowInfo) {
-      this.$refs.add.open("edit", rowInfo);
+      this.$router.push({
+        path: "/portraitManageAdd",
+        query: {
+          eikon_id: rowInfo.EIKON_ID
+        }
+      });
+      // this.$refs.add.open("edit", rowInfo);
     },
     updateStatus(scope, status, name) {
       this.$confirm(`[${scope.row.EIKON_ID}]该画像确定是否${name}？`, "提示", {

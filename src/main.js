@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from '@/router/index.js'
 import store from '@/store'
-import '@/utils/global.js'
+import '@/libs/global.js'
 
 import ElementUI from 'element-ui';
 import {
@@ -10,12 +10,30 @@ import {
 } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/styles/element-variables.scss';
-import '@/styles/common.scss'
 import MyPagination from '@/components/MyPagination'
+import BackTip from '@/components/BackTip'
+import "@/assets/iconfont/iconfont.css"; //引入阿里矢量图标库
+//
+import vueMagicTree from "vue-magic-tree";
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import logic_block from "@/views/customerPortrait/portraitManage/logic_block";
+import logic_tree from "@/views/customerPortrait/portraitManage/logic_tree";
+import numberRangeSelect from "@/views/customerPortrait/portraitManage/number-range-select"
+import '@/sass/index.scss';
+import '@/styles/common.scss'
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
 Vue.component('MyPagination', MyPagination);
+Vue.component('BackTip', BackTip);
+//
+
+Vue.component('Treeselect', Treeselect)
+Vue.component('logicBlock', logic_block)
+Vue.component('vue-magic-tree', vueMagicTree)
+Vue.component('logicTree', logic_tree)
+Vue.component('number-range-select', numberRangeSelect)
 //路由导航守卫
 router.beforeEach((to, from, next) => {
   //to 要去的路由配置

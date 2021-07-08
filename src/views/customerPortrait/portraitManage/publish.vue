@@ -69,7 +69,13 @@
     </div>
     <div slot="footer" style="text-align: center;">
       <el-button size="mini" @click="close">取 消</el-button>
-      <el-button size="mini" type="primary" @click="doUpdateAsReleaseInfo" :loading="loading">发布</el-button>
+      <el-button
+        size="mini"
+        :disabled="!rightList.length"
+        type="primary"
+        @click="doUpdateAsReleaseInfo"
+        :loading="loading"
+      >发布</el-button>
     </div>
   </el-dialog>
 </template>
@@ -142,6 +148,7 @@ export default {
     },
     doUpdateAsReleaseInfo() {
       let list = [];
+      if (!this.rightList.length) return this.$message.warning("请选择数据！");
       this.rightList.map(o => list.push(o.SCENE_ID));
       let scene_ids = list.join(",");
       this.loading = true;

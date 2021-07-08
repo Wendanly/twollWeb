@@ -1,0 +1,20 @@
+$menuHeight: 108px;
+$top_menuHeight: 60px;
+$top_menu_subHeight: 48px;
+$subMenuHeight: 48px;
+
+@mixin calcWidth($width:0) {
+    width: -moz-calc(100% - #{$width});
+    width: -webkit-calc(100% - #{$width});
+    width: calc(100% - #{$width});
+}
+
+@mixin calcHeight($height:0) {
+    height: -moz-calc(100% - #{$height});
+    height: -webkit-calc(100% - #{$height});
+    height: calc(100% - #{$height});
+}
+
+$page_box_padding:10px;
+
+$operateHeight: 47px;
