@@ -57,11 +57,35 @@ export default {
             //   index: "/portraitInteraction"
             // }
           ]
+        },
+        {
+          title: "画像对外服务",
+          index: "/portraitExternalService",
+          children: [
+            {
+              title: "服务权限",
+              index: "/serviceAuth"
+            },
+            {
+              title: "服务记录",
+              index: "/serviceLog"
+            },
+            {
+              title: "服务监控",
+              index: "/serviceMonitor"
+            }
+          ]
+        },
+        {
+          title: "场景化分析服务",
+          index: "/sceneAnalyService",
+          children: [
+            {
+              title: "我的客户群",
+              index: "/customerCluster"
+            }
+          ]
         }
-        // {
-        //   title: "两级标签信息同步",
-        //   index: "/info"
-        // }
       ]
     };
   },

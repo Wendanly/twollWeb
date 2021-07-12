@@ -60,7 +60,9 @@ module.exports = {
         return args
       })
   },
-  configureWebpack: () => {},
+  configureWebpack: config => {
+    config.entry.app = ["babel-polyfill", "./src/main.js"];
+  },
 
   // CSS 相关选项
   css: {

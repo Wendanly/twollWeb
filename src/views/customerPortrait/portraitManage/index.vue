@@ -22,15 +22,43 @@
         v-loading="tableLoading"
         :height="`calc(100vh - ${$TABLEHEIGHT}px)`"
       >
-        <el-table-column prop="EIKON_ID" label="画像编码"></el-table-column>
-        <el-table-column prop="EIKON_NAME" label="画像名称"></el-table-column>
+        <el-table-column prop="EIKON_ID" show-overflow-tooltip label="画像编码"></el-table-column>
+        <el-table-column prop="EIKON_NAME" show-overflow-tooltip label="画像名称"></el-table-column>
         <el-table-column prop="EIKON_STATUS_NAME" label="画像状态"></el-table-column>
         <el-table-column prop="IOP_TYPE_NAME" label="建设主体"></el-table-column>
         <el-table-column prop="RELEASE_NAME" label="发布状态"></el-table-column>
+        <el-table-column width="130" prop="COL23" sortable>
+          <template slot="header" slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="正序倒序" placement="right">
+              <span>营销接触率</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column width="130" prop="COL29" sortable>
+          <template slot="header" slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="正序倒序" placement="right">
+              <span>营销成功率</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column width="120" prop="COL5" sortable>
+          <template slot="header" slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="正序倒序" placement="right">
+              <span>调用次数</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column width="120" prop="CNT" sortable>
+          <template slot="header" slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="正序倒序" placement="right">
+              <span>画像规模</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
         <el-table-column prop="OPER_ID" label="操作人"></el-table-column>
-        <el-table-column prop="OPER_DATE" label="操作时间"></el-table-column>
-        <el-table-column label="操作" width="320">
+        <el-table-column prop="OPER_DATE" width="150" label="操作时间"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="320">
           <template slot-scope="scope">
             <el-button
               type="text"

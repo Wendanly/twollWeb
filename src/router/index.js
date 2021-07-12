@@ -41,6 +41,26 @@ const routes = [{
         name: 'portraitManageAdd',
         component: () => import('@/views/customerPortrait/portraitManage/add')
       },
+      {
+        path: '/serviceMonitor',
+        name: 'serviceMonitor',
+        component: () => import('@/views/portraitExternalService/serviceMonitor')
+      },
+      {
+        path: '/serviceLog',
+        name: 'serviceLog',
+        component: () => import('@/views/portraitExternalService/serviceLog')
+      },
+      {
+        path: '/serviceAuth',
+        name: 'serviceAuth',
+        component: () => import('@/views/portraitExternalService/serviceAuth')
+      },
+      {
+        path: '/customerCluster',
+        name: 'customerCluster',
+        component: () => import('@/views/sceneAnalyService/customerCluster')
+      },
     ],
   },
 
@@ -49,7 +69,7 @@ const routes = [{
 
 const router = new VueRouter({
   mode: 'history',
-  base:'/twoll_web/',
+  base: '/twoll_web/',
   routes
 })
 

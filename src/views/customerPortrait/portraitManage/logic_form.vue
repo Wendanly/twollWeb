@@ -242,6 +242,9 @@ import dimLevelSel from "./dimLevelSel";
 
 export default {
   name: "logic_form",
+  components: {
+    // chooseDim: () => import("@/components/chooseDim")
+  },
   props: {
     father: null,
     subjectId: null,
@@ -306,6 +309,7 @@ export default {
     },
     // 维值点击
     dimLevelClick($event) {
+      console.log(34);
       //dimLevelExcessList
       if (!this.father.dimLevelExcess) return;
       if ($event) {
@@ -360,7 +364,7 @@ export default {
           dim_level_id: data.dimLevelId,
           type: "all"
         }).then(res => {
-          if (res.DATA_LIST) {
+          if (!res.FLAG) {
             this.contentList = transHump(res.DATA_LIST);
           } else {
             this.$set(this.father, "dimLevelExcess", true);
@@ -416,7 +420,6 @@ export default {
     }
   },
   mounted() {
-    console.log("mounted");
     let _this = this;
     if (this.father == null) return;
     this.queryParam.symbol = this.father.symbol;
@@ -438,7 +441,7 @@ export default {
         dim_level_id: this.father.operand.dimLevelId,
         type: "all"
       }).then(res => {
-        if (res.DATA_LIST) {
+        if (!res.FLAG) {
           _this.contentList = transHump(res.DATA_LIST);
           let ids = [];
           for (let i = 0; i < _this.contentList.length; i++) {

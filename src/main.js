@@ -1,9 +1,13 @@
 import Vue from 'vue'
+// import 'babel-polyfill'
 import App from './App.vue'
 import router from '@/router/index.js'
 import store from '@/store'
 import '@/libs/global.js'
 
+import {
+  isNullOrEmpty
+} from "@/libs/tools";
 import ElementUI from 'element-ui';
 import {
   Message
@@ -14,6 +18,8 @@ import MyPagination from '@/components/MyPagination'
 import BackTip from '@/components/BackTip'
 import "@/assets/iconfont/iconfont.css"; //引入阿里矢量图标库
 //
+
+import SfTable from "@/components/sf-table"
 import vueMagicTree from "vue-magic-tree";
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
@@ -22,6 +28,12 @@ import logic_tree from "@/views/customerPortrait/portraitManage/logic_tree";
 import numberRangeSelect from "@/views/customerPortrait/portraitManage/number-range-select"
 import '@/sass/index.scss';
 import '@/styles/common.scss'
+
+Vue.component('SfTable', SfTable)
+import ElfDialog from "@/components/el-dialog"
+import {
+  Observable
+} from 'rxjs';
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
@@ -29,6 +41,7 @@ Vue.component('MyPagination', MyPagination);
 Vue.component('BackTip', BackTip);
 //
 
+Vue.component('ElfDialog', ElfDialog)
 Vue.component('Treeselect', Treeselect)
 Vue.component('logicBlock', logic_block)
 Vue.component('vue-magic-tree', vueMagicTree)
@@ -56,6 +69,75 @@ router.beforeEach((to, from, next) => {
 
 
 });
+
+
+
+
+
+const removeDialogItem = (ins) => {
+  for (let i = 0; i < Vue.prototype.dialogTempArr.length; i++) {
+    if (Vue.prototype.dialogTempArr[i] == ins) {
+      Vue.prototype.dialogTempArr.splice(i, 1);
+      break;
+    }
+  }
+}
+
+let modelIds = 0;
+Vue.prototype.dialogTempArr = [];
+Vue.prototype.$OpenDialog = ({
+  component,
+  param,
+  title,
+  width,
+  top,
+  ok,
+  cancel
+}) => {
+  let className = `self-model-${modelIds++}`;
+  let obs = new Observable().subscribe({
+    next: (res) => {
+      ins.closeDialog();
+      removeDialogItem(ins);
+      let dom = document.querySelectorAll('#modelListBox>.el-dialog__wrapper:not(.myDialog)');
+      for (let i = 0; i < dom.length; i++) {
+        document.getElementById('modelListBox').removeChild(dom[i]);
+      }
+      obs.unsubscribe();
+      ok(res);
+    },
+    error: (res) => {
+      ins.closeDialog();
+      removeDialogItem(ins);
+      let dom = document.querySelectorAll('#modelListBox>.el-dialog__wrapper:not(.myDialog)');
+      for (let i = 0; i < dom.length; i++) {
+        document.getElementById('modelListBox').removeChild(dom[i]);
+      }
+      obs.unsubscribe();
+      cancel(res);
+    },
+  });
+  const dialog = Vue.component("ElfDialog");
+  const instance = new dialog();
+  instance.title = title;
+  instance.top = isNullOrEmpty(top) ? "15vh" : top;
+  instance.width = isNullOrEmpty(width) ? "50%" : width + "px";
+  const componentBody = Vue.component("self-content", component);
+  let instanceBody = new componentBody();
+  instanceBody.dismiss = obs;
+  instanceBody.context = param;
+  let ins = instance.$mount();
+  Vue.prototype.dialogTempArr.push(ins);
+  document.getElementById('modelListBox').appendChild(ins.$el);
+  ins.$el.classList.add(className);
+  ins.$el.classList.add("myDialog");
+  setTimeout(() => {
+    instanceBody.$mount(instance.$refs.slots, false);
+  })
+}
+
+
+
 new Vue({
   render: h => h(App),
   router,

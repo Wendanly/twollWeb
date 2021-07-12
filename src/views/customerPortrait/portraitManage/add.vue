@@ -9,7 +9,7 @@
           label-position="center"
           label-width="100px"
           :model="formData"
-          :rules="formRules"
+          :rules="isShow?{}:formRules"
           ref="formRules"
           :disabled="isShow"
         >
@@ -121,10 +121,10 @@
         </el-form>
       </div>
       <div class="content" style="width:100%;">
-        <logicStep ref="logicStep" v-show="isNext" :frameId="frameId"></logicStep>
+        <logicStep ref="logicStep" v-show="isNext" :noModification="isShow" :frameId="frameId"></logicStep>
       </div>
       <div class="foot">
-        <el-button size="mini" v-if="!isNext" @click="close">取消</el-button>
+        <el-button size="mini" v-if="!isNext || isShow" @click="close">取消</el-button>
         <el-button size="mini" type="primary" v-if="isNext" @click="back">上一步</el-button>
         <el-button size="mini" type="primary" v-if="!isNext" @click="next">下一步</el-button>
         <el-button
@@ -132,7 +132,7 @@
           :disabled="isShow"
           size="mini"
           type="primary"
-          v-if="isNext"
+          v-if="isNext && !isShow"
           @click="save"
         >保存</el-button>
       </div>
@@ -349,6 +349,7 @@ export default {
               this.formData[i] = tmpObj[i];
             }
             this.$refs.logicStep.list = JSON.parse(tmpObj.ruleJson);
+            console.log(this.$refs.logicStep.list);
           } else {
             this.$message.warning(res.MESSAGE);
           }
