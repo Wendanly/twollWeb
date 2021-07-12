@@ -98,12 +98,7 @@
         </el-row>
       </el-form>
       <div class="table">
-        <el-table
-          :data="tableData"
-          style="width: 100%"
-          v-loading="tableLoading"
-          :height="`calc(100vh - ${$TABLEHEIGHT}px)`"
-        >
+        <el-table :data="tableData" style="width: 100%" v-loading="tableLoading" max-height="240">
           <el-table-column prop="STAT_DATE" show-overflow-tooltip label="周期"></el-table-column>
           <el-table-column prop="EXEC_STATUS_NAME" show-overflow-tooltip label="状态"></el-table-column>
           <el-table-column prop="CNT" show-overflow-tooltip label="规模"></el-table-column>
@@ -115,7 +110,6 @@
     </div>
     <div slot="footer" style="text-align: center;">
       <el-button size="mini" @click="close">取 消</el-button>
-      <!-- <el-button size="mini" type="primary" @click="doSaveAsSceneInfo" :loading="loading">保存</el-button> -->
     </div>
   </el-dialog>
 </template>
@@ -145,7 +139,6 @@ export default {
       tableLoading: false
     };
   },
-  created() {},
   methods: {
     open(rowInfo) {
       this.getList({
@@ -162,17 +155,6 @@ export default {
           this.tableLoading = false;
           if (res.SUCCESS) {
             this.tableData = res.DATA_LIST;
-            this.tableData = [{
-              SUBJECT_NAME:'wer'
-            },{
-              SUBJECT_NAME:'wer'
-            },{
-              SUBJECT_NAME:'wer'
-            },{
-              SUBJECT_NAME:'wer'
-            },{
-              SUBJECT_NAME:'wer'
-            },];
             for (let i in this.formData) {
               this.formData[i] = res.DATA_INFO[i];
             }
