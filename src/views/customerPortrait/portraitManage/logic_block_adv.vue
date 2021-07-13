@@ -85,7 +85,7 @@
                     })
                 } else if (this.selection == "1") {
                     if (isNullOrEmpty(this.fixedDate)) {
-                        this.warningMes("请填写固定周期");
+                        this.$message.warning("请填写固定周期");
                         return;
                     }
                     this.$set(this.father, "advancedVal", {
@@ -96,12 +96,12 @@
                     })
                 } else {
                     if (isNullOrEmpty(this.offset)) {
-                        this.warningMes("请填写偏移量");
+                        this.$message.warning("请填写偏移量");
                         return;
                     }
                     var regPos = /^((-\d+)|(0+))$/;
                     if (!regPos.test(this.offset)) {
-                        this.warningMes("偏移量必须为0或负数");
+                        this.$message.warning("偏移量必须为0或负数");
                         return;
                     }
                     this.$set(this.father, "advancedVal", {

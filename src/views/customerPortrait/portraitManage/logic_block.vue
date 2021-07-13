@@ -202,7 +202,7 @@ export default {
     },
     advance(item) {
       if (item.operand == null) {
-        this.warningMes("请先选择标签客户群");
+        this.$message.warning("请先选择标签客户群");
         return;
       }
       this.$OpenDialog({

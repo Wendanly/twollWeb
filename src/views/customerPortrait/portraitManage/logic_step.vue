@@ -117,7 +117,7 @@ export default {
       if (this.checkDuplication(val)) {
         this.dynamicTags.push(val);
       } else {
-        this.warningMes("标签客户群重复");
+        this.$message.warning("标签客户群重复");
       }
     },
     // 获取默认值方法

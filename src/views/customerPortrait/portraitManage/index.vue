@@ -58,7 +58,7 @@
         <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
         <el-table-column prop="OPER_ID" label="操作人"></el-table-column>
         <el-table-column prop="OPER_DATE" width="150" label="操作时间"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="320">
+        <el-table-column fixed="right" label="操作" width="370">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -74,6 +74,8 @@
               v-else
               @click="goTo(scope,'下线')"
             >下线</el-button>
+            <el-button type="text" size="mini" @click="goTo(scope,'查看')">查看</el-button>
+            <el-button type="text" size="mini" @click="goTo(scope,'版本')">版本</el-button>
             <el-button
               type="text"
               size="mini"
@@ -101,7 +103,8 @@
 import {
   GetEikonList,
   DoUpdateAsEikonStatus,
-  DoDelAsEikonInfo
+  DoDelAsEikonInfo,
+  DoSaveAsP2GPortrait
 } from "@/api/portraitManage.js";
 export default {
   name: "portraitManage",
@@ -121,14 +124,14 @@ export default {
         eikon_name: ""
       },
       btn: {
-        // 上线: ["00"],
-        // 下线: ["10", "11"],
-        停用: ["10", "11"],
-        编辑: ["00", "10", "11"],
-        查看: ["00", "10", "20", "30", "11", "21", "31"],
-        版本: ["00", "10"],
-        发布: ["10", "11"],
-        删除: ["00", "20", "30", "31"]
+        // 上线: ["002"],
+        // 下线: ["102", "112"],
+        停用: ["102", "112"],
+        编辑: ["002", "112", "012", "102"],
+        规则: ["102", "002"],
+        发布: ["102"],
+        删除: ["202", "302", "311"],
+        反馈: ["111"]
       }
     };
   },
@@ -142,16 +145,17 @@ export default {
   },
   methods: {
     getStatus(scope, name) {
-      let status = scope.row.STATUS + "" + scope.row.IS_RELEASE;
+      let status =
+        scope.row.STATUS + "" + scope.row.IS_RELEASE + "" + scope.row.IOP_TYPE;
       //因为上线下线用一个按钮显示，所以单独判断
       if (name == "上线_show") {
-        return status == "00" ? true : false;
+        return status == "002" ? true : false;
       }
       if (name == "上线_dis") {
-        return status == "00" ? false : true;
+        return status == "002" ? false : true;
       }
       if (name == "下线") {
-        return status == "10" || status == "11" ? false : true;
+        return status == "102" || status == "112" ? false : true;
       }
       return this.btn[name].indexOf(status) > -1 ? false : true;
     },
@@ -173,6 +177,8 @@ export default {
         this.del(rowInfo);
       } else if (name == "查看") {
         this.edit(rowInfo, "isShow");
+      } else if (name == "反馈") {
+        this.callback(scope, name);
       }
     },
     add() {
@@ -191,7 +197,6 @@ export default {
           isShow: flag == "isShow" ? "isShow" : ""
         }
       });
-      // this.$refs.add.open("edit", rowInfo);
     },
     updateStatus(scope, status, name) {
       this.$confirm(`[${scope.row.EIKON_ID}]该画像确定是否${name}？`, "提示", {
@@ -206,7 +211,30 @@ export default {
             eikon_id: scope.row.EIKON_ID,
             status
           }).then(res => {
-            this.getList();
+            if (res.SUCCESS) {
+              this.$message.success(res.MESSAGE);
+              return this.getList();
+            } else return this.$message.warning(res.MESSAGE);
+          });
+        })
+        .catch(() => {});
+    },
+    callback(scope, name) {
+      this.$confirm(`[${scope.row.EIKON_ID}]该画像确定是否${name}？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        type: "warning"
+      })
+        .then(() => {
+          DoSaveAsP2GPortrait({
+            eikon_id: scope.row.EIKON_ID
+          }).then(res => {
+            if (res.SUCCESS) {
+              this.$message.success(res.MESSAGE);
+              return this.getList();
+            } else return this.$message.warning(res.MESSAGE);
           });
         })
         .catch(() => {});

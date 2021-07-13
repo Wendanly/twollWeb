@@ -284,7 +284,7 @@ export default {
         this.queryParam.symbol != 7
       ) {
         //区间 6，7
-        this.warningMes("请选择非区间函数");
+       this.$message.warning("请选择非区间函数");
         return;
       }
       if (
@@ -292,7 +292,7 @@ export default {
         (this.queryParam.symbol == 6 || this.queryParam.symbol == 7)
       ) {
         //非区间
-        this.warningMes("请选择区间函数");
+        this.$message.warning("请选择区间函数");
         return;
       }
       this.queryParam.expressionVal = value;

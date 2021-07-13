@@ -45,7 +45,9 @@ module.exports = {
 
   // babel-loader 默认会跳过 node_modules 依赖。
   // 通过这个选项可以显式转译一个依赖。
-  transpileDependencies: [],
+  transpileDependencies: [
+    'vue-magic-tree',//这个依赖包里用到了es6语法，所以要显示转译
+  ],
 
   // 是否为生产环境构建生成 source map？
   productionSourceMap: false,
@@ -61,7 +63,7 @@ module.exports = {
       })
   },
   configureWebpack: config => {
-    config.entry.app = ["babel-polyfill", "./src/main.js"];
+    // config.entry.app = ["babel-polyfill", "./src/main.js"];
   },
 
   // CSS 相关选项

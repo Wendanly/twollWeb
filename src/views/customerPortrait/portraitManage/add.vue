@@ -389,7 +389,7 @@ export default {
       // console.log(this.$refs.logicStep.LimitOutput); //限制输出记录数 bool
       // console.log(this.$refs.logicStep.LimitOutputNum); //结果限制值
       if (this.$refs.logicStep.list.children.length == 0) {
-        this.warningMes("至少设置一条逻辑设置");
+        this.$message.warning("至少设置一条逻辑设置");
         return;
       }
 

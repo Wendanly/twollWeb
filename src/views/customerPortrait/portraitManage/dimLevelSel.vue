@@ -141,7 +141,7 @@ export default {
     },
     conform() {
       if (this.dynamicTags.length > 50) {
-        this.warningMes("最多选择50个维值,请用或配置多个");
+        this.$message.warning("最多选择50个维值,请用或配置多个");
         return;
       }
       if (this.dynamicTags == null) {

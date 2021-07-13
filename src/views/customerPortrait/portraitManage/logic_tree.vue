@@ -223,7 +223,7 @@ export default {
     },
     conform() {
       if (this.result == null) {
-        this.warningMes("请选择标签名");
+        this.$message.warning("请选择标签名");
         return;
       }
       this.father.operand = this.result;
