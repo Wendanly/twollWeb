@@ -12,7 +12,7 @@
       ></el-input>
       <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
       <div class="btn-group">
-        <el-button class="margin-r" type="primary" size="mini" @click="add">新增</el-button>
+        <el-button type="primary" size="mini" @click="add">新增</el-button>
       </div>
     </div>
     <div class="table">
@@ -84,6 +84,28 @@
               :disabled="getStatus(scope,index)"
               @click="goTo(scope,index)"
             >{{index}}</el-button>
+
+            <el-button
+              type="text"
+              size="mini"
+              :disabled="getStatus(scope,'申请_dis')"
+              v-if="getStatus(scope,'申请_show')"
+              @click="goTo(scope,'申请')"
+            >申请</el-button>
+            <el-button
+              type="text"
+              size="mini"
+              :disabled="getStatus(scope,'上报_dis')"
+              v-else-if="getStatus(scope,'上报_show')"
+              @click="goTo(scope,'上报')"
+            >上报</el-button>
+            <el-button
+              type="text"
+              size="mini"
+              :disabled="getStatus(scope,'审批')"
+              v-else
+              @click="goTo(scope,'审批')"
+            >审批</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,6 +119,7 @@
     </div>
     <version ref="version"></version>
     <publish ref="publish"></publish>
+    <check ref="check"></check>
   </div>
 </template>
 <script>
@@ -104,13 +127,15 @@ import {
   GetEikonList,
   DoUpdateAsEikonStatus,
   DoDelAsEikonInfo,
-  DoSaveAsP2GPortrait
+  DoSaveAsP2GPortrait,
+  DoSaveAsP2GPortraitUp
 } from "@/api/portraitManage.js";
 export default {
   name: "portraitManage",
   components: {
-    version: () => import("./version"),
-    publish: () => import("./publish")
+    version: () => import(/* webpackChunkName: "version" */ "./version"),
+    publish: () => import(/* webpackChunkName: "publish" */ "./publish"),
+    check: () => import(/* webpackChunkName: "check" */ "./check")
   },
   data() {
     return {
@@ -128,10 +153,13 @@ export default {
         // 下线: ["102", "112"],
         停用: ["102", "112"],
         编辑: ["002", "112", "012", "102"],
-        规则: ["102", "002"],
+        // 规则: ["102", "002"],
         发布: ["102"],
-        删除: ["202", "302", "311"],
-        反馈: ["111"]
+        删除: ["202", "302", "311"]
+
+        // 申请: ["101"],
+        // 上报: ["102", "132"],
+        // 审批: ["112"]
       }
     };
   },
@@ -145,9 +173,10 @@ export default {
   },
   methods: {
     getStatus(scope, name) {
-      let status =
-        scope.row.STATUS + "" + scope.row.IS_RELEASE + "" + scope.row.IOP_TYPE;
-      //因为上线下线用一个按钮显示，所以单独判断
+      let row = scope.row;
+      let status = row.STATUS + "" + row.IS_RELEASE + "" + row.IOP_TYPE;
+      let status1 = row.STATUS + "" + row.CROSS_STATUS + "" + row.IOP_TYPE;
+      //因为上线、下线用一个按钮显示，所以单独判断
       if (name == "上线_show") {
         return status == "002" ? true : false;
       }
@@ -156,6 +185,23 @@ export default {
       }
       if (name == "下线") {
         return status == "102" || status == "112" ? false : true;
+      }
+      //因为申请、上报以及审批用一个按钮显示，所以单独判断
+      if (name == "申请_show") {
+        return status1 == "101" ? true : false;
+      }
+      if (name == "申请_dis") {
+        return status1 == "101" ? false : true;
+      }
+      if (name == "上报_show") {
+        return status1 == "102" || status1 == "132" ? true : false;
+      }
+      if (name == "上报_dis") {
+        return status1 == "102" || status1 == "132" ? false : true;
+      }
+
+      if (name == "审批") {
+        return status1 == "112" ? false : true;
       }
       return this.btn[name].indexOf(status) > -1 ? false : true;
     },
@@ -177,8 +223,12 @@ export default {
         this.del(rowInfo);
       } else if (name == "查看") {
         this.edit(rowInfo, "isShow");
-      } else if (name == "反馈") {
-        this.callback(scope, name);
+      } else if (name == "申请") {
+        this.callback(scope, name, DoSaveAsP2GPortrait);
+      } else if (name == "上报") {
+        this.callback(scope, name, DoSaveAsP2GPortraitUp);
+      } else if (name == "审批") {
+        this.$refs.check.open(rowInfo);
       }
     },
     add() {
@@ -219,7 +269,7 @@ export default {
         })
         .catch(() => {});
     },
-    callback(scope, name) {
+    callback(scope, name, funName) {
       this.$confirm(`[${scope.row.EIKON_ID}]该画像确定是否${name}？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -228,7 +278,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          DoSaveAsP2GPortrait({
+          funName({
             eikon_id: scope.row.EIKON_ID
           }).then(res => {
             if (res.SUCCESS) {

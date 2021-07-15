@@ -1,5 +1,4 @@
 import Vue from 'vue'
-// import 'babel-polyfill'
 import App from './App.vue'
 import router from '@/router/index.js'
 import store from '@/store'
@@ -135,8 +134,6 @@ Vue.prototype.$OpenDialog = ({
     instanceBody.$mount(instance.$refs.slots, false);
   })
 }
-
-
 
 new Vue({
   render: h => h(App),

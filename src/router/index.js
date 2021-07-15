@@ -13,11 +13,14 @@ const routes = [{
   {
     path: '/login',
     name: 'login',
-    component: resolve => (require(["@/views/Login"], resolve))
-  }, {
+    // component: resolve => (require(["@/views/Login"], resolve)),
+    // component: resolve => require.ensure([], () => resolve(require("@/views/Login")), 'loginhaha'), //按需加载，并命名
+    component: resolve => import( /* webpackChunkName: "Login" */ '@/views/Login'), //按需加载，并命名
+  },
+  {
     path: '/home',
     name: 'home',
-    component: () => import('@/views/home/index.vue'),
+    component: () => import( /* webpackChunkName: "home" */ '@/views/home/index.vue'),
     redirect: {
       path: '/scenClassManage',
     },
@@ -34,7 +37,7 @@ const routes = [{
       {
         path: '/portraitManage',
         name: 'portraitManage',
-        component: () => import('@/views/customerPortrait/portraitManage')
+        component: () => import( /* webpackChunkName: "portraitManage" */ '@/views/customerPortrait/portraitManage')
       },
       {
         path: '/portraitManageAdd',

@@ -44,7 +44,15 @@ export const getDimValueById = data => {
 export const getEikonInfo = data => {
   return request('POST', 'eikon/getEikonInfo', data);
 }
-//反馈
+//申请
 export const DoSaveAsP2GPortrait = data => {
   return request('POST', 'eikon/doSaveAsP2GPortrait', data);
+}
+//申请
+export const DoSaveAsP2GPortraitUp = data => {
+  return request('POST', 'eikon/doSaveAsP2GPortraitUp', data);
+}
+//申请
+export const DoSaveAsP2GPortraitCheck = data => {
+  return request('POST', 'eikon/doSaveAsP2GPortraitCheck', data);
 }

@@ -10,7 +10,7 @@
       ></el-input>
       <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
       <div class="btn-group">
-        <el-button class="margin-r" type="primary" size="mini" @click="add">新增</el-button>
+        <el-button  type="primary" size="mini" @click="add">新增</el-button>
       </div>
     </div>
 
