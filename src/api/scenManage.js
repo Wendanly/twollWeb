@@ -20,3 +20,7 @@ export const GetSClassList = data => {
 export const GetSClassList2 = data => {
   return request('POST', 'eikon/getSClassList2', data);
 }
+//查看
+export const GetViewSceneInfo = data => {
+  return request('POST', 'eikon/getViewSceneInfo', data);
+}

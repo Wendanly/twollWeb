@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
@@ -13,8 +12,6 @@ const routes = [{
   {
     path: '/login',
     name: 'login',
-    // component: resolve => (require(["@/views/Login"], resolve)),
-    // component: resolve => require.ensure([], () => resolve(require("@/views/Login")), 'loginhaha'), //按需加载，并命名
     component: resolve => import( /* webpackChunkName: "Login" */ '@/views/Login'), //按需加载，并命名
   },
   {
@@ -27,12 +24,12 @@ const routes = [{
     children: [{
         path: '/scenClassManage',
         name: 'scenClassManage',
-        component: () => import('@/views/customerPortrait/scenClassManage')
+        component: () => import( /* webpackChunkName: "scenClassManage" */ '@/views/customerPortrait/scenClassManage')
       },
       {
         path: '/scenManage',
         name: 'scenManage',
-        component: () => import('@/views/customerPortrait/scenManage')
+        component: () => import( /* webpackChunkName: "scenManage" */ '@/views/customerPortrait/scenManage'),
       },
       {
         path: '/portraitManage',
@@ -42,27 +39,27 @@ const routes = [{
       {
         path: '/portraitManageAdd',
         name: 'portraitManageAdd',
-        component: () => import('@/views/customerPortrait/portraitManage/add')
+        component: () => import( /* webpackChunkName: "add" */ '@/views/customerPortrait/portraitManage/add')
       },
       {
         path: '/serviceMonitor',
         name: 'serviceMonitor',
-        component: () => import('@/views/portraitExternalService/serviceMonitor')
+        component: () => import( /* webpackChunkName: "add" */ '@/views/portraitExternalService/serviceMonitor')
       },
       {
         path: '/serviceLog',
         name: 'serviceLog',
-        component: () => import('@/views/portraitExternalService/serviceLog')
+        component: () => import( /* webpackChunkName: "serviceLog" */ '@/views/portraitExternalService/serviceLog')
       },
       {
         path: '/serviceAuth',
         name: 'serviceAuth',
-        component: () => import('@/views/portraitExternalService/serviceAuth')
+        component: () => import( /* webpackChunkName: "serviceAuth" */ '@/views/portraitExternalService/serviceAuth')
       },
       {
         path: '/customerCluster',
         name: 'customerCluster',
-        component: () => import('@/views/sceneAnalyService/customerCluster')
+        component: () => import( /* webpackChunkName: "customerCluster" */ '@/views/sceneAnalyService/customerCluster')
       },
     ],
   },

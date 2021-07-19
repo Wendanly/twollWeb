@@ -70,7 +70,9 @@ export default {
       loading: false
     };
   },
-  created() {},
+  created() {
+    
+  },
   inject: ["getParentList"],
   methods: {
     open(rowInfo) {

@@ -74,6 +74,7 @@
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="edit(scope)">编辑</el-button>
+            <el-button type="text" size="mini" @click="showInfo(scope)">详情</el-button>
             <el-button type="text" size="mini" @click="updateStatus(scope)">{{getStatus(scope)}}</el-button>
             <el-button type="text" size="mini" v-if="scope.row.STATUS != '1'" @click="del(scope)">删除</el-button>
             <el-button type="text" size="mini" v-else disabled>删除</el-button>
@@ -89,6 +90,7 @@
       ></MyPagination>
     </div>
     <add ref="add"></add>
+    <show ref="show"></show>
   </div>
 </template>
 <script>
@@ -98,10 +100,12 @@ import {
   DoDelAsSceneInfo
 } from "@/api/scenManage.js";
 import { GetDicInfo } from "@/api/commonApi.js";
-import add from "@/views/customerPortrait/scenManage/add";
 export default {
-  name: "scenClassManage",
-  components: { add },
+  name: "scenManage",
+  components: {
+    add: () => import("./add"),
+    show: () => import("./show")
+  },
   data() {
     return {
       maxlength: 50,
@@ -146,6 +150,9 @@ export default {
     },
     edit(rowInfo) {
       this.$refs.add.open("edit", rowInfo.row);
+    },
+    showInfo(rowInfo) {
+      this.$refs.show.open(rowInfo.row);
     },
     getStatus(scope) {
       if (scope.row.STATUS == "0") {
