@@ -88,6 +88,7 @@
         <el-table :data="tableData" style="width: 100%" v-loading="tableLoading" max-height="240">
           <el-table-column prop="EIKON_ID" show-overflow-tooltip label="画像编码"></el-table-column>
           <el-table-column prop="EIKON_NAME" show-overflow-tooltip label="画像名称"></el-table-column>
+          <el-table-column prop="CATALOG" show-overflow-tooltip label="目录归属"></el-table-column>
           <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
           <el-table-column prop="OPER_ID" show-overflow-tooltip label="创建人"></el-table-column>
           <el-table-column prop="OPER_DATE" width="170" show-overflow-tooltip label="创建时间"></el-table-column>
