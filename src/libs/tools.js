@@ -169,3 +169,28 @@ class Hump {
 export const transHump = list => {
   return new Hump(list).transHump();
 }
+
+export const groupByType = (arr, param) => {
+  var map = {},
+    dest = [];
+  for (var i = 0; i < arr.length; i++) {
+    var ai = arr[i];
+    if (ai[param] && !map[ai[param]]) {
+      dest.push({
+        name: ai[param],
+        data: [ai]
+      });
+      map[ai[param]] = ai;
+    } else {
+      for (var j = 0; j < dest.length; j++) {
+        var dj = dest[j];
+        if (dj.name == ai[param]) {
+          dj.data.push(ai);
+          break;
+        }
+      }
+    }
+  }
+  // console.log(JSON.parse(JSON.stringify(dest)));
+  return dest;
+}

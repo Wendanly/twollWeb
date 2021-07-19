@@ -42,9 +42,9 @@
 </template>
 <script>
 import {
-  // GetQueryAuthList,
   GetQueryServeMonitorList
 } from "@/api/portraitExternalService.js";
+import { groupByType } from "@/libs/tools.js";
 import * as echarts from "echarts";
 export default {
   name: "serviceMonitor",
@@ -134,7 +134,7 @@ export default {
           this.tableLoading = false;
           if (res.SUCCESS) {
             this.tableData = res.DATA_LIST;
-            this.chart(this.groupByType(res.PIC_LIST, "APP_ID"));
+            this.chart(groupByType(res.PIC_LIST, "APP_ID"));
           } else {
             this.$message.warning(res.MESSAGE);
           }
@@ -142,30 +142,6 @@ export default {
         .catch(err => {
           this.tableLoading = false;
         });
-    },
-    groupByType(arr, param) {
-      var map = {},
-        dest = [];
-      for (var i = 0; i < arr.length; i++) {
-        var ai = arr[i];
-        if (ai[param] && !map[ai[param]]) {
-          dest.push({
-            name: ai[param],
-            data: [ai]
-          });
-          map[ai[param]] = ai;
-        } else {
-          for (var j = 0; j < dest.length; j++) {
-            var dj = dest[j];
-            if (dj.name == ai[param]) {
-              dj.data.push(ai);
-              break;
-            }
-          }
-        }
-      }
-      console.log(JSON.parse(JSON.stringify(dest)));
-      return dest;
     },
     chart(list) {
       //初始化ehcharts实例
