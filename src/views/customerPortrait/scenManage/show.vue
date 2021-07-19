@@ -3,7 +3,7 @@
     :destroy-on-close="true"
     :title="title"
     :visible.sync="dialogFormVisible"
-    width="700px"
+    width="800px"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :before-close="close"
@@ -90,7 +90,7 @@
           <el-table-column prop="EIKON_NAME" show-overflow-tooltip label="画像名称"></el-table-column>
           <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
           <el-table-column prop="OPER_ID" show-overflow-tooltip label="创建人"></el-table-column>
-          <el-table-column prop="创建时间" show-overflow-tooltip label="创建时间"></el-table-column>
+          <el-table-column prop="OPER_DATE" width="170" show-overflow-tooltip label="创建时间"></el-table-column>
         </el-table>
       </div>
     </div>
