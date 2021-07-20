@@ -43,12 +43,11 @@
         <el-table-column prop="STAT_DATE" show-overflow-tooltip label="最新周期"></el-table-column>
         <el-table-column prop="LABEL_RES" show-overflow-tooltip label="数据来源"></el-table-column>
         <el-table-column prop="STATUS_NAME" show-overflow-tooltip label="标签状态"></el-table-column>
-
-        <!-- <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="view(scope)">查看</el-button>
+            <el-button type="text" size="mini" @click="apply(scope)">申请</el-button>
           </template>
-        </el-table-column>-->
+        </el-table-column>
       </el-table>
       <MyPagination
         @size-change="handleSizeChange"
@@ -62,7 +61,7 @@
   </div>
 </template>
 <script>
-import { GetLabelList } from "@/api/labelManage.js";
+import { DoSaveAsp2GPortraitResult, GetLabelList } from "@/api/labelManage.js";
 export default {
   name: "labelManage",
   components: {
@@ -86,8 +85,28 @@ export default {
     this.getList();
   },
   methods: {
-    view(rowInfo) {
-      this.$refs.add.open(rowInfo.row);
+    apply(scope) {
+      let rowInfo = scope.row;
+      this.$confirm(`[${rowInfo.LABEL_ID}]该服务确定是否申请？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        type: "warning"
+      })
+        .then(() => {
+          DoSaveAsp2GPortraitResult({
+            label_id: rowInfo.LABEL_ID
+          }).then(res => {
+            if (res.SUCCESS) {
+              this.$message.success(res.MESSAGE);
+              this.getList();
+            } else {
+              this.$message.warning(res.MESSAGE);
+            }
+          });
+        })
+        .catch(() => {});
     },
     getList(from) {
       //清空子节点

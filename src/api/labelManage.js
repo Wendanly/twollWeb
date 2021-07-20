@@ -3,3 +3,7 @@ import request from '@/api/request.js'
 export const GetLabelList = data => {
   return request('POST', 'label/getLabelList', data);
 }
+//申请
+export const DoSaveAsp2GPortraitResult = data => {
+  return request('POST', 'label/doSaveAsp2GPortraitResult', data);
+}
