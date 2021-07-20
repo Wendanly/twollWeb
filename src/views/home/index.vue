@@ -44,18 +44,6 @@ export default {
               title: "画像管理",
               index: "/portraitManage"
             }
-            // {
-            //   title: "智能优化管理",
-            //   index: "/IntelOptManagement"
-            // },
-            // {
-            //   title: "画像对外服务",
-            //   index: "/PortraitExternalService"
-            // },
-            // {
-            //   title: "两级画像互动",
-            //   index: "/portraitInteraction"
-            // }
           ]
         },
         {
@@ -85,6 +73,10 @@ export default {
               index: "/customerCluster"
             }
           ]
+        },
+        {
+          title: "标签管理",
+          index: "/labelManage",
         }
       ]
     };

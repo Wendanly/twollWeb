@@ -61,6 +61,11 @@ const routes = [{
         name: 'customerCluster',
         component: () => import( /* webpackChunkName: "customerCluster" */ '@/views/sceneAnalyService/customerCluster')
       },
+      {
+        path: '/labelManage',
+        name: 'labelManage',
+        component: () => import( /* webpackChunkName: "labelManage" */ '@/views/labelManage')
+      },
     ],
   },
 

@@ -130,11 +130,13 @@ import {
   DoSaveAsP2GPortrait,
   DoSaveAsP2GPortraitUp
 } from "@/api/portraitManage.js";
+// import check from '@/views/customerPortrait/portraitManage/check'
 export default {
   name: "portraitManage",
   components: {
     version: () => import(/* webpackChunkName: "version" */ "./version"),
     publish: () => import(/* webpackChunkName: "publish" */ "./publish"),
+    // check
     check: () => import(/* webpackChunkName: "check" */ "./check")
   },
   data() {

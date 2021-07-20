@@ -10,7 +10,7 @@
       ></el-input>
       <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
       <div class="btn-group">
-        <el-button  type="primary" size="mini" @click="add">新增</el-button>
+        <el-button type="primary" size="mini" @click="add">新增</el-button>
       </div>
     </div>
 
@@ -19,7 +19,7 @@
         :data="tableData"
         style="width: 100%"
         v-loading="tableLoading"
-       :height="`calc(100vh - ${$TABLEHEIGHT}px)`"
+        :height="`calc(100vh - ${$TABLEHEIGHT}px)`"
         :row-key="getRowKeys"
         :expand-row-keys="expands"
         @expand-change="expandChange"
@@ -78,10 +78,11 @@ import {
   GetSceneClassList,
   DoDelAsSceneClassInfo
 } from "@/api/scenClassManage.js";
-import add from "@/views/customerPortrait/scenClassManage/add";
 export default {
   name: "scenClassManage",
-  components: { add },
+  components: {
+    add: () => import(/* webpackChunkName : "scenClassManageAdd" */ "./add")
+  },
   data() {
     return {
       class_name: "",

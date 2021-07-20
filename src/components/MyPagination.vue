@@ -33,6 +33,7 @@ export default {
       default: "right",
       type: String
     },
+    //指定哪些不显示，如：['size','jumper']等
     notLayout: {
       default: () => {
         return [];
@@ -61,7 +62,7 @@ export default {
     layoutStr() {
       let layoutList = this.layout.split(",");
       let result = layoutList.filter(o => this.notLayout.every(j => o != j));
-      console.log(result);
+      // console.log(result);
       return result.join(",");
     }
   },

@@ -103,8 +103,8 @@ import { GetDicInfo } from "@/api/commonApi.js";
 export default {
   name: "scenManage",
   components: {
-    add: () => import("./add"),
-    show: () => import("./show")
+    add: () => import(/* webpackChunkName :"scenManageAdd" */ "./add"),
+    show: () => import(/* webpackChunkName :"scenManageShow" */ "./show")
   },
   data() {
     return {

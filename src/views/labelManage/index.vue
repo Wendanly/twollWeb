@@ -1,18 +1,12 @@
 <template>
   <div class="wrap">
     <div class="search">
-      <!-- <MyInput
-        @keyupEnter="getList('search')"
-        :model="serarchCondition.subject_id"
-        placeholder="客户群编码"
-        :maxlength="maxlength"
-      ></MyInput> -->
       <el-input
         @keyup.enter.native="getList('search')"
         class="fuzzy-query"
         size="mini"
-        v-model="serarchCondition.subject_id"
-        placeholder="客户群编码"
+        v-model="serarchCondition.label_id"
+        placeholder="标签编码"
         clearable
         :maxlength="maxlength"
       ></el-input>
@@ -20,8 +14,8 @@
         @keyup.enter.native="getList('search')"
         class="fuzzy-query"
         size="mini"
-        v-model="serarchCondition.subject_name"
-        placeholder="客户群名称"
+        v-model="serarchCondition.label_name"
+        placeholder="标签名称"
         clearable
         :maxlength="maxlength"
       ></el-input>
@@ -38,22 +32,23 @@
         v-loading="tableLoading"
         :height="`calc(100vh - ${$TABLEHEIGHT}px)`"
       >
-        <el-table-column prop="SUBJECT_ID" show-overflow-tooltip label="客户群编码"></el-table-column>
-        <el-table-column prop="SUBJECT_NAME" show-overflow-tooltip label="客户群名称"></el-table-column>
-        <el-table-column prop="FRAME_NAME" show-overflow-tooltip label="分析主体"></el-table-column>
-        <el-table-column prop="CYCLE_NAME" show-overflow-tooltip label=" 周期"></el-table-column>
-        <el-table-column prop="BEGIN_DATE" show-overflow-tooltip label="开始时间"></el-table-column>
-        <el-table-column prop="END_DATE" show-overflow-tooltip label="结束时间"></el-table-column>
-        <el-table-column prop="CNT" show-overflow-tooltip label="规模"></el-table-column>
-        <el-table-column prop="BUS_INFO" show-overflow-tooltip label="备注"></el-table-column>
-        <el-table-column prop="OPER_ID" show-overflow-tooltip label="操作人"></el-table-column>
-        <el-table-column prop="CREATE_TIME" show-overflow-tooltip label="创建时间"></el-table-column>
+        <el-table-column prop="LABEL_ID" show-overflow-tooltip label="标签编码"></el-table-column>
+        <el-table-column prop="LABEL_NAME" show-overflow-tooltip label="标签名称"></el-table-column>
+        <el-table-column prop="LABEL_TYPE" show-overflow-tooltip label="标签类型"></el-table-column>
+        <el-table-column prop="CLASS_ID" show-overflow-tooltip label="分类编码"></el-table-column>
+        <el-table-column prop="LABEL_RATE" show-overflow-tooltip label="更新频率"></el-table-column>
+        <el-table-column prop="CREATE_DATE" show-overflow-tooltip label="创建时间"></el-table-column>
+        <el-table-column prop="REMARK" show-overflow-tooltip label="标签描述"></el-table-column>
+        <el-table-column prop="RULE_INFO" show-overflow-tooltip label="标签规则"></el-table-column>
+        <el-table-column prop="STAT_DATE" show-overflow-tooltip label="最新周期"></el-table-column>
+        <el-table-column prop="LABEL_RES" show-overflow-tooltip label="数据来源"></el-table-column>
+        <el-table-column prop="STATUS_NAME" show-overflow-tooltip label="标签状态"></el-table-column>
 
-        <el-table-column label="操作" width="180">
+        <!-- <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="view(scope)">查看</el-button>
           </template>
-        </el-table-column>
+        </el-table-column>-->
       </el-table>
       <MyPagination
         @size-change="handleSizeChange"
@@ -63,15 +58,15 @@
         :total="total"
       ></MyPagination>
     </div>
-    <add ref="add"></add>
+    <!-- <add ref="add"></add> -->
   </div>
 </template>
 <script>
-import { GetMySubjectList } from "@/api/customerCluster.js";
+import { GetLabelList } from "@/api/labelManage.js";
 export default {
-  name: "customerCluster",
+  name: "labelManage",
   components: {
-    add: () => import("./add")
+    // add: () => import("./add")
   },
   data() {
     return {
@@ -82,13 +77,12 @@ export default {
       rows: this.$PAGE_SIZES[0], // 初始化每页展示多少条
       tableLoading: false,
       serarchCondition: {
-        subject_id: "",
-        subject_name: ""
+        label_id: "",
+        label_name: ""
       }
     };
   },
   created() {
-    console.log(67);
     this.getList();
   },
   methods: {
@@ -102,7 +96,7 @@ export default {
         this.rows = this.$PAGE_SIZES[0];
       }
       this.tableLoading = true;
-      GetMySubjectList({
+      GetLabelList({
         page: this.page,
         rows: this.rows,
         ...this.serarchCondition
