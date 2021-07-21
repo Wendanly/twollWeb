@@ -1,24 +1,16 @@
 <template>
   <div class="wrap">
     <div class="search">
-      <el-input
+      <MyInput
         @keyup.enter.native="getList('search')"
-        class="fuzzy-query"
-        size="mini"
         v-model="serarchCondition.label_id"
         placeholder="标签编码"
-        clearable
-        :maxlength="maxlength"
-      ></el-input>
-      <el-input
+      ></MyInput>
+      <MyInput
         @keyup.enter.native="getList('search')"
-        class="fuzzy-query"
-        size="mini"
         v-model="serarchCondition.label_name"
         placeholder="标签名称"
-        clearable
-        :maxlength="maxlength"
-      ></el-input>
+      ></MyInput>
       <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
       <!-- <div class="btn-group">
         <el-button  type="primary" size="mini" @click="add">新增</el-button>
@@ -45,7 +37,12 @@
         <el-table-column prop="STATUS_NAME" show-overflow-tooltip label="标签状态"></el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="apply(scope)">申请</el-button>
+            <el-button
+              type="text"
+              size="mini"
+              :disabled="scope.row.LABEL_STATUS == '0'?false:true"
+              @click="apply(scope)"
+            >申请</el-button>
           </template>
         </el-table-column>
       </el-table>

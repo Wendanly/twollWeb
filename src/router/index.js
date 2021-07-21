@@ -39,12 +39,12 @@ const routes = [{
       {
         path: '/portraitManageAdd',
         name: 'portraitManageAdd',
-        component: () => import( /* webpackChunkName: "add" */ '@/views/customerPortrait/portraitManage/add')
+        component: () => import( /* webpackChunkName: "portraitManageAdd" */ '@/views/customerPortrait/portraitManage/add')
       },
       {
         path: '/serviceMonitor',
         name: 'serviceMonitor',
-        component: () => import( /* webpackChunkName: "add" */ '@/views/portraitExternalService/serviceMonitor')
+        component: () => import( /* webpackChunkName: "serviceMonitor" */ '@/views/portraitExternalService/serviceMonitor')
       },
       {
         path: '/serviceLog',
@@ -54,12 +54,12 @@ const routes = [{
       {
         path: '/serviceAuth',
         name: 'serviceAuth',
-        component: () => import( /* webpackChunkName: "serviceAuth" */ '@/views/portraitExternalService/serviceAuth')
+        component: () => import( /* webpackChunkName: "serviceAuth"*/ '@/views/portraitExternalService/serviceAuth')
       },
       {
         path: '/customerCluster',
         name: 'customerCluster',
-        component: () => import( /* webpackChunkName: "customerCluster" */ '@/views/sceneAnalyService/customerCluster')
+        component: () => import( /*  webpackChunkName: "customerCluster */ '@/views/sceneAnalyService/customerCluster')
       },
       {
         path: '/labelManage',

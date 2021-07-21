@@ -14,6 +14,7 @@ import {
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/styles/element-variables.scss';
 import MyPagination from '@/components/MyPagination'
+import MyInput from '@/components/MyInput'
 import BackTip from '@/components/BackTip'
 import "@/assets/iconfont/iconfont.css"; //引入阿里矢量图标库
 //
@@ -38,6 +39,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.component('MyPagination', MyPagination);
 Vue.component('BackTip', BackTip);
+Vue.component('MyInput', MyInput);
 //
 
 Vue.component('ElfDialog', ElfDialog)

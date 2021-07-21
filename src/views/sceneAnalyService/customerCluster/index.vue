@@ -1,21 +1,11 @@
 <template>
   <div class="wrap">
     <div class="search">
-      <!-- <MyInput
-        @keyupEnter="getList('search')"
-        :model="serarchCondition.subject_id"
-        placeholder="客户群编码"
-        :maxlength="maxlength"
-      ></MyInput> -->
-      <el-input
+      <MyInput
         @keyup.enter.native="getList('search')"
-        class="fuzzy-query"
-        size="mini"
-        v-model="serarchCondition.subject_id"
         placeholder="客户群编码"
-        clearable
-        :maxlength="maxlength"
-      ></el-input>
+        v-model="serarchCondition.subject_id"
+      ></MyInput>
       <el-input
         @keyup.enter.native="getList('search')"
         class="fuzzy-query"
@@ -71,7 +61,7 @@ import { GetMySubjectList } from "@/api/customerCluster.js";
 export default {
   name: "customerCluster",
   components: {
-    add: () => import("./add")
+    add: () => import(/* webpackChunkName : 'customerClusterAdd'*/ "./add")
   },
   data() {
     return {
@@ -88,7 +78,6 @@ export default {
     };
   },
   created() {
-    console.log(67);
     this.getList();
   },
   methods: {

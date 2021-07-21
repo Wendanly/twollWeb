@@ -148,7 +148,7 @@ import * as _ from "lodash";
 export default {
   name: "add",
   components: {
-    logicStep: () => import("./logic_step")
+    logicStep: () => import(/*webpackChunkName:'logic_step'*/"./logic_step")
   },
   data() {
     let _this = this;

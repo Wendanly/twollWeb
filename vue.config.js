@@ -46,7 +46,7 @@ module.exports = {
   // babel-loader 默认会跳过 node_modules 依赖。
   // 通过这个选项可以显式转译一个依赖。
   transpileDependencies: [
-    'vue-magic-tree',//这个依赖包里用到了es6语法，所以要显示转译
+    'vue-magic-tree', //这个依赖包里用到了es6语法，所以要显示转译
   ],
 
   // 是否为生产环境构建生成 source map？
@@ -60,10 +60,12 @@ module.exports = {
       .tap(args => {
         args[0].title = '标签两级互动平台'
         return args
-      })
+      });
+    // 移除 prefetch 插件
+    // config.plugins.delete('prefetch');//移动端可放开，节省带宽
   },
   configureWebpack: config => {
-   
+
   },
 
   // CSS 相关选项
@@ -99,8 +101,8 @@ module.exports = {
     // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli/cli-service.md#配置代理
     proxy: {
       '/twoll/api': {
-        target: 'http://192.168.1.66:18581',
-        // target: 'http://172.32.148.70:18581/',
+        // target: 'http://192.168.1.66:18581',
+        target: 'http://172.32.148.70:18581/',
         changeOrigin: true,
         secure: false,
         // ws: true,

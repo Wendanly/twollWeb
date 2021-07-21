@@ -33,7 +33,7 @@ export default {
           index: "/customerPortrait",
           children: [
             {
-              title: "场景分类管理",
+              title: "场景分类",
               index: "/scenClassManage"
             },
             {

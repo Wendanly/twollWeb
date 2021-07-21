@@ -37,7 +37,6 @@
       ></MyPagination>-->
     </div>
     <div id="box" class="box"></div>
-    <div class="headerBox"></div>
   </div>
 </template>
 <script>

@@ -20,79 +20,48 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="客户群编码" prop="SUBJECT_ID">
-              <el-input
-                size="mini"
-                placeholder="客户群编码"
-                :maxlength="maxlength"
-                v-model.trim="formData.SUBJECT_ID"
-              ></el-input>
+              <MyInput placeholder="客户群编码" :maxlength="maxlength" v-model="formData.SUBJECT_ID"></MyInput>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="客户群名称" prop="SUBJECT_NAME">
-              <el-input
-                size="mini"
-                placeholder="客户群名称"
-                :maxlength="maxlength"
-                v-model.trim="formData.SUBJECT_NAME"
-              ></el-input>
+              <MyInput placeholder="客户群名称" :maxlength="maxlength" v-model="formData.SUBJECT_NAME"></MyInput>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="分析主体" prop="FRAME_NAME">
-              <el-input
-                size="mini"
-                placeholder="分析主体"
-                :maxlength="maxlength"
-                v-model.trim="formData.FRAME_NAME"
-              ></el-input>
+              <MyInput placeholder="分析主体" :maxlength="maxlength" v-model="formData.FRAME_NAME"></MyInput>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="周期" prop="CYCLE_NAME">
-              <el-input
-                size="mini"
-                placeholder="周期"
-                :maxlength="maxlength"
-                v-model.trim="formData.CYCLE_NAME"
-              ></el-input>
+              <MyInput placeholder="周期" :maxlength="maxlength" v-model="formData.CYCLE_NAME"></MyInput>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="开始时间" prop="BEGIN_DATE">
-              <el-input
-                size="mini"
-                placeholder="开始时间"
-                :maxlength="maxlength"
-                v-model.trim="formData.BEGIN_DATE"
-              ></el-input>
+              <MyInput placeholder="开始时间" :maxlength="maxlength" v-model="formData.BEGIN_DATE"></MyInput>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="结束时间" prop="END_DATE">
-              <el-input
-                size="mini"
-                placeholder="结束时间"
-                :maxlength="maxlength"
-                v-model.trim="formData.END_DATE"
-              ></el-input>
+              <MyInput :maxlength="maxlength" placeholder="结束时间" v-model="formData.END_DATE"></MyInput>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注" prop="BUS_INFO">
-              <el-input
+              <MyInput
                 type="textarea"
-                size="mini"
-                placeholder="备注"
                 :maxlength="maxlength"
-                v-model.trim="formData.BUS_INFO"
-              ></el-input>
+                placeholder="备注"
+                v-model="formData.BUS_INFO"
+              ></MyInput>
             </el-form-item>
           </el-col>
         </el-row>
