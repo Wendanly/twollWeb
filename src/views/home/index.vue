@@ -2,6 +2,7 @@
   <div class="home-wrap">
     <div class="top">
       <el-menu
+        active-text-color="#409EFF"
         mode="horizontal"
         router
         :default-active="$route.path"
@@ -76,7 +77,7 @@ export default {
         },
         {
           title: "标签管理",
-          index: "/labelManage",
+          index: "/labelManage"
         }
       ]
     };
@@ -116,6 +117,11 @@ $height: 50px;
     position: absolute;
     top: $height;
     width: 100%;
+  }
+
+  /deep/ .el-submenu__title:hover,
+  /deep/ .el-menu-item:hover {
+    background: #e3f3fb;
   }
 }
 </style>

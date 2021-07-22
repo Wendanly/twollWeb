@@ -67,8 +67,6 @@ router.beforeEach((to, from, next) => {
   router.push({
     name: 'login'
   })
-
-
 });
 
 
