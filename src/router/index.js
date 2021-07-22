@@ -66,9 +66,14 @@ const routes = [{
         name: 'labelManage',
         component: () => import( /* webpackChunkName: "labelManage" */ '@/views/labelManage')
       },
+
     ],
   },
-
+  {
+    path: '*',
+    name: 'FoundNot',
+    component: () => import( /* webpackChunkName: "FoundNot" */ '@/views/FoundNot')
+  },
 
 ]
 

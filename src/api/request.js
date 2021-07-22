@@ -58,7 +58,7 @@ service.interceptors.response.use(
     return Promise.reject(data);
   }
 );
-const request = (method, url, data, config) => {
+export default (method, url, data, config) => {
   let flag = method == 'PUT' || method == 'POST' || method == 'PATCH' ? true : false;
   let options = {
     method,
@@ -69,4 +69,3 @@ const request = (method, url, data, config) => {
   flag ? options.data = qs.stringify(data) : options.params = data;
   return service(options);
 }
-export default request
