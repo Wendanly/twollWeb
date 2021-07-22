@@ -3,15 +3,15 @@
     <div class="search">
       <MyInput
         @keyup.enter.native="getList('search')"
-        placeholder="客户群编码"
-        v-model="serarchCondition.subject_id"
+        placeholder="指标编码"
+        v-model="serarchCondition.rta_id"
       ></MyInput>
       <el-input
         @keyup.enter.native="getList('search')"
         class="fuzzy-query"
         size="mini"
-        v-model="serarchCondition.subject_name"
-        placeholder="客户群名称"
+        v-model="serarchCondition.rta_name"
+        placeholder="指标名称"
         clearable
         :maxlength="maxlength"
       ></el-input>
@@ -28,22 +28,20 @@
         v-loading="tableLoading"
         :height="`calc(100vh - ${$TABLEHEIGHT}px)`"
       >
-        <el-table-column prop="SUBJECT_ID" show-overflow-tooltip label="客户群编码"></el-table-column>
-        <el-table-column prop="SUBJECT_NAME" show-overflow-tooltip label="客户群名称"></el-table-column>
-        <el-table-column prop="FRAME_NAME" show-overflow-tooltip label="分析主体"></el-table-column>
-        <el-table-column prop="CYCLE_NAME" show-overflow-tooltip label=" 周期"></el-table-column>
-        <el-table-column prop="BEGIN_DATE" show-overflow-tooltip label="开始时间"></el-table-column>
-        <el-table-column prop="END_DATE" show-overflow-tooltip label="结束时间"></el-table-column>
-        <el-table-column prop="CNT" show-overflow-tooltip label="规模"></el-table-column>
-        <el-table-column prop="BUS_INFO" show-overflow-tooltip label="备注"></el-table-column>
-        <el-table-column prop="OPER_ID" show-overflow-tooltip label="操作人"></el-table-column>
-        <el-table-column prop="CREATE_TIME" show-overflow-tooltip label="创建时间"></el-table-column>
+        <el-table-column prop="RTA_ID" show-overflow-tooltip label="指标编码"></el-table-column>
+        <el-table-column prop="RTA_NAME" show-overflow-tooltip label="指标名称"></el-table-column>
+        <el-table-column prop="SYMBOL_NAME" show-overflow-tooltip label="符号"></el-table-column>
+        <el-table-column prop="THRESHOLD_VAL" show-overflow-tooltip label=" 阈值"></el-table-column>
+        <el-table-column prop="RTA_CNT" show-overflow-tooltip label="客群数量"></el-table-column>
+        <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
+        <el-table-column prop="OPER_DATE" show-overflow-tooltip label="创建时间"></el-table-column>
+        <el-table-column prop="OPER_ID" show-overflow-tooltip label="创建人"></el-table-column>
 
-        <el-table-column label="操作" width="180">
+        <!-- <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="view(scope)">查看</el-button>
           </template>
-        </el-table-column>
+        </el-table-column>-->
       </el-table>
       <MyPagination
         @size-change="handleSizeChange"
@@ -56,13 +54,12 @@
     <add ref="add"></add>
   </div>
 </template>
-
 <script>
-import { GetMySubjectList } from "@/api/customerCluster.js";
+import { GetRtaSubjectList } from "@/api/targetMonitor.js";
 export default {
-  name: "customerCluster",
+  name: "targetMonitor",
   components: {
-    add: () => import(/* webpackChunkName : 'customerClusterAdd'*/ "./add")
+    // add: () => import(/* webpackChunkName : 'customerClusterAdd'*/ "./add")
   },
   data() {
     return {
@@ -73,8 +70,8 @@ export default {
       rows: this.$PAGE_SIZES[0], // 初始化每页展示多少条
       tableLoading: false,
       serarchCondition: {
-        subject_id: "",
-        subject_name: ""
+        rta_id: "",
+        rta_name: ""
       }
     };
   },
@@ -92,7 +89,7 @@ export default {
         this.rows = this.$PAGE_SIZES[0];
       }
       this.tableLoading = true;
-      GetMySubjectList({
+      GetRtaSubjectList({
         page: this.page,
         rows: this.rows,
         ...this.serarchCondition

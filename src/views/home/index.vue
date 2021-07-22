@@ -64,6 +64,7 @@ export default {
               index: "/serviceMonitor"
             }
           ]
+          
         },
         {
           title: "场景化分析服务",
@@ -72,7 +73,11 @@ export default {
             {
               title: "我的客户群",
               index: "/customerCluster"
-            }
+            },
+            {
+              title: "指标监控",
+              index: "/targetMonitor"
+            },
           ]
         },
         {

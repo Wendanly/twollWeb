@@ -25,6 +25,7 @@ export default {
   name: "App",
   components: {},
   data() {
+    
     return {
       defaultActive: "/projectManage",
       list: [
