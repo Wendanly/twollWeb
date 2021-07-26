@@ -40,9 +40,7 @@
   </div>
 </template>
 <script>
-import {
-  GetQueryServeMonitorList
-} from "@/api/portraitExternalService.js";
+import { GetQueryServeMonitorList } from "@/api/portraitExternalService.js";
 import { groupByType } from "@/libs/tools.js";
 import * as echarts from "echarts";
 export default {

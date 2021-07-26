@@ -42,6 +42,7 @@
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="view(scope)">查看</el-button>
+            <el-button type="text" size="mini" @click="analysis(scope)">分析</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -85,6 +86,14 @@ export default {
     view(rowInfo) {
       this.$refs.add.open(rowInfo.row);
     },
+    analysis(scope) {
+      this.$router.push({
+        path: "/customerCluster/analysis",
+        query: {
+          subject_id: scope.row.SUBJECT_ID
+        }
+      });
+    },
     getList(from) {
       //清空子节点
       if (from == "search") {
@@ -106,6 +115,7 @@ export default {
             this.$message.warning(res.MESSAGE);
           }
         })
+
         .catch(err => {
           this.tableLoading = false;
         });

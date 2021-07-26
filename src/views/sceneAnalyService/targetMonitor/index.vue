@@ -16,9 +16,9 @@
         :maxlength="maxlength"
       ></el-input>
       <el-button type="primary" @click="getList('search')" size="mini">查询</el-button>
-      <!-- <div class="btn-group">
-        <el-button  type="primary" size="mini" @click="add">新增</el-button>
-      </div>-->
+      <div class="btn-group">
+        <el-button type="primary" size="mini" @click="add">新增</el-button>
+      </div>
     </div>
 
     <div class="table">
@@ -36,12 +36,13 @@
         <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
         <el-table-column prop="OPER_DATE" show-overflow-tooltip label="创建时间"></el-table-column>
         <el-table-column prop="OPER_ID" show-overflow-tooltip label="创建人"></el-table-column>
-
-        <!-- <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="view(scope)">查看</el-button>
+            <el-button type="text" size="mini" @click="del(scope)">删除</el-button>
+            <el-button type="text" size="mini" @click="edit(scope)">编辑</el-button>
+            <el-button type="text" size="mini" @click="analysis(scope)">分析</el-button>
           </template>
-        </el-table-column>-->
+        </el-table-column>
       </el-table>
       <MyPagination
         @size-change="handleSizeChange"
@@ -55,11 +56,11 @@
   </div>
 </template>
 <script>
-import { GetRtaSubjectList } from "@/api/targetMonitor.js";
+import { GetRtaSubjectList, DoDelAsRtaSubject } from "@/api/targetMonitor.js";
 export default {
   name: "targetMonitor",
   components: {
-    // add: () => import(/* webpackChunkName : 'customerClusterAdd'*/ "./add")
+    add: () => import(/* webpackChunkName : 'targetMonitorAdd'*/ "./add")
   },
   data() {
     return {
@@ -75,12 +76,29 @@ export default {
       }
     };
   },
+  provide() {
+    return {
+      getParentList: this.getList
+    };
+  },
   created() {
     this.getList();
   },
   methods: {
-    view(rowInfo) {
-      this.$refs.add.open(rowInfo.row);
+    analysis(scope) {
+      this.$router.push({
+        path: "/targetMonitor/analysis",
+        query: {
+          rta_id: scope.row.RTA_ID,
+          symbol: scope.row.SYMBOL,
+        }
+      });
+    },
+    add() {
+      this.$refs.add.open("add");
+    },
+    edit(rowInfo) {
+      this.$refs.add.open("edit", rowInfo.row);
     },
     getList(from) {
       //清空子节点
@@ -106,6 +124,28 @@ export default {
         .catch(err => {
           this.tableLoading = false;
         });
+    },
+    del(scoped) {
+      this.$confirm("确定删除吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        type: "warning"
+      }).then(() => {
+        DoDelAsRtaSubject({
+          rta_id: scoped.row.RTA_ID
+        })
+          .then(res => {
+            if (res.SUCCESS) {
+              this.$message.success(res.MESSAGE);
+              this.getList();
+            } else {
+              this.$message.warning(res.MESSAGE);
+            }
+          })
+          .catch(err => {});
+      });
     },
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);

@@ -71,6 +71,16 @@ const routes = [{
         name: 'labelManage',
         component: () => import( /* webpackChunkName: "labelManage" */ '@/views/labelManage')
       },
+      {
+        path: '/targetMonitor/analysis',
+        name: 'targetMonitorAnalysis',
+        component: () => import( /* webpackChunkName: "targetMonitorAnalysis" */ '@/views/sceneAnalyService/targetMonitor/analysis')
+      },
+      {
+        path: '/customerCluster/analysis',
+        name: 'customerClusterAnalysis',
+        component: () => import( /* webpackChunkName: "customerClusterAnalysis" */ '@/views/sceneAnalyService/customerCluster/analysis')
+      },
 
     ],
   },

@@ -136,7 +136,12 @@ export default {
             class_id: scoped.row.CLASS_ID
           })
             .then(res => {
-              this.getList();
+              if (res.SUCCESS) {
+                this.$message.success(res.MESSAGE);
+                this.getList();
+              } else {
+                this.$message.warning(res.MESSAGE);
+              }
             })
             .catch(err => {});
         })
