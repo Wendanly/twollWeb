@@ -1,3 +1,4 @@
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
   // 项目部署的基础路径
   // 我们默认假设你的应用将会部署在域名的根部，
@@ -64,8 +65,17 @@ module.exports = {
     // 移除 prefetch 插件
     // config.plugins.delete('prefetch');//移动端可放开，节省带宽
   },
-  configureWebpack: config => {
-
+  configureWebpack: {
+    // minimizer: [
+    //   new TerserPlugin({
+    //     terserOptions: {
+    //       compress: {
+    //         drop_console: true,
+    //         drop_debugger: true,
+    //       }
+    //     }
+    //   })
+    // ]
   },
 
   // CSS 相关选项

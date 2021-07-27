@@ -1,5 +1,6 @@
 <template>
   <div class="pane">
+    <label style="margin-right:10px">标签类型</label>
     <el-radio-group v-if="value == '1'" v-model="model" @change="getSubjectAnalyzeGCList">
       <el-radio
         :label="item.GROUP_NAME"
@@ -7,7 +8,13 @@
         :key="index"
       >{{item.GROUP_NAME}}</el-radio>
     </el-radio-group>
-    <el-checkbox-group :max="2" v-else v-model="checkList" @change="getSubjectAnalyzeJZList">
+    <el-checkbox-group
+      style="display: inline-block;"
+      :max="2"
+      v-else
+      v-model="checkList"
+      @change="getSubjectAnalyzeJZList"
+    >
       <el-checkbox
         :label="item.GROUP_NAME"
         v-for="(item,index) in list"
@@ -18,10 +25,16 @@
       <div v-loading="loading1" id="box1" class="box"></div>
       <div v-loading="loading2" id="box2" class="box"></div>
     </div>
-    <!-- <div class="content">
-      <div>单客群，多周期</div>
-      <div v-loading="loading2" id="box2" class="box"></div>
-    </div>-->
+    <el-table height="100%" class="mytable" ref="table" :data="tableData" style="width: 100%">
+      <el-table-column
+        v-for="(item,index) in colList"
+        :key="index"
+        :prop="item.prop"
+        show-overflow-tooltip
+        :width="item.label.length >4?'140':''"
+        :label="item.label"
+      ></el-table-column>
+    </el-table>
   </div>
 </template>
 <script>
@@ -47,6 +60,8 @@ export default {
   },
   data() {
     return {
+      tableData: [],
+      colList: [],
       loading1: false,
       loading2: false,
       list: [],
@@ -166,14 +181,32 @@ export default {
         seriesData.push({
           name: o.name,
           type: id == "box1" ? "bar" : "line",
-          // stack: "总量",
           data
         });
       });
+      let _this = this;
       var option = {
         title: {
           // text: ""
           // show: false
+        },
+        toolbox: {
+          show: id == "box1" ? true : false,
+          top: 20,
+          right: 20,
+          feature: {
+            // dataZoom: {
+            //   yAxisIndex: "none"
+            // },
+            dataView: {
+              readOnly: true,
+              lang: ["数据视图", "关闭", ""],
+              optionToContent: opt => {
+                _this.transData(opt);
+                return _this.$refs.table.$el;
+              }
+            }
+          }
         },
         grid: {
           bottom: "1%",
@@ -192,20 +225,46 @@ export default {
           }
         },
         xAxis: {
+          name: this.checkList[0],
           type: "category",
           axisLabel: { interval: 0, rotate: 40 },
           data: xAxisData
         },
         yAxis: {
+          // name: this.checkList[0],
           type: "value"
         },
         series: seriesData
       };
+      console.log(option);
       //使用刚刚指定的配置项和数据项显示图表
       myChart.setOption(option, true);
       window.addEventListener("resize", function() {
         myChart.resize();
       });
+    },
+    transData(opt) {
+      var axisData = opt.xAxis[0].data; //维度
+      let axisName = opt.xAxis[0].name; //第一列
+      var series = opt.series; //第二列及之后
+      let colList = [];
+      let tableData = [];
+      colList.push({
+        prop: axisName,
+        label: axisName
+      });
+      series.map(o => colList.push({ prop: o.name, label: o.name }));
+      console.log(colList); //列头
+      axisData.map((o, j) => {
+        let obj = {};
+        colList.map((m, n) =>
+          n == 0 ? (obj[m.prop] = o) : (obj[m.prop] = series[n - 1].data[j])
+        );
+        tableData.push(obj);
+      });
+      this.colList = colList;
+      this.tableData = tableData;
+      console.log(tableData); //数据
     },
     getOption1(list) {
       let xAxisData = [];
@@ -287,10 +346,7 @@ export default {
   height: 100%;
   width: 100%;
   padding-top: 10px;
-
   .content {
-    // width: 50%;
-    // margin: 0 auto;
     height: calc(100% - 16px);
     display: flex;
     .box {

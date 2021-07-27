@@ -23,6 +23,7 @@
 
     <div class="table">
       <el-table
+        ref="table"
         :data="tableData"
         style="width: 100%"
         v-loading="tableLoading"
@@ -85,6 +86,7 @@ export default {
   methods: {
     view(rowInfo) {
       this.$refs.add.open(rowInfo.row);
+      console.log(this.$refs);
     },
     analysis(scope) {
       this.$router.push({

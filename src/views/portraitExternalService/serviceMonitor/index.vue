@@ -19,6 +19,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="REMARK" show-overflow-tooltip label="服务描述"></el-table-column>
+        <el-table-column prop="服务描" show-overflow-tooltip label="服务描"></el-table-column>
         <!-- <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="edit(scope)">编辑</el-button>
