@@ -135,6 +135,8 @@ Vue.prototype.$OpenDialog = ({
   })
 }
 
+
+
 new Vue({
   render: h => h(App),
   router,

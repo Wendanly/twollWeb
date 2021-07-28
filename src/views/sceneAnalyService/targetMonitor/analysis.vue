@@ -11,9 +11,6 @@
         <div v-loading="loading2" id="box2" class="box"></div>
       </div>
     </div>
-    <!-- <div class="foot">
-      <el-button size="mini" @click="close">取消</el-button>
-    </div>-->
   </div>
 </template>
 <script>
@@ -31,7 +28,7 @@ export default {
   created() {
     this.rta_id = this.$route.query.rta_id; //,
     this.symbol = this.$route.query.symbol; //,
-    this.whitchBox = 1;
+    this.whitchBox = 1; //默认渲染第一个图形
     this.getRtaPicInfo({
       pic_type: "1",
       rta_id: this.rta_id
@@ -167,7 +164,7 @@ export default {
           formatter: () => "阈值 " + threshold
         }
       };
-      seriesData[0].markLine = markLine;
+      seriesData[0].markLine = markLine; //添加标线
       //指定图表的配置项和数据
       var option = {
         title: {
@@ -181,6 +178,7 @@ export default {
           data: legendData
         },
         xAxis: {
+          title: this.whitchBox == 1 ? "单周" : "多周", //随便加个参数，用作标记
           type: "category",
           data: xAxisData
         },
@@ -190,7 +188,8 @@ export default {
         },
         series: seriesData
       };
-      if (this.whitchBox == 2 && this.color) option.color = [this.color];
+      console.log(option);
+      if (this.whitchBox == 2 && this.color) option.color = [this.color]; //第二个图形的颜色要跟随第一个图形的图形
       //使用刚刚指定的配置项和数据项显示图表
       myChart.setOption(option, true);
       window.addEventListener("resize", function() {
@@ -198,12 +197,14 @@ export default {
       });
       myChart.on("click", params => {
         console.log(params);
-        this.color = params.color;
-        if (params.seriesName) {
+        this.color = params.color; //记录第一个图形的颜色
+        //第一个图形可以点击，第二个图形不能点击
+        if (option.xAxis.title == "单周" && params.seriesName) {
           this.whitchBox = 2;
           this.getRtaPicInfo2(params.seriesName);
         }
       });
+      //只有在初次运行
       if (this.whitchBox == 1) {
         this.whitchBox = 2;
         this.getRtaPicInfo2(legendData[0]);
@@ -254,9 +255,6 @@ $height: 30px;
         height: calc(100% - 21px);
       }
     }
-  }
-  .foot {
-    text-align: center;
   }
 }
 </style>

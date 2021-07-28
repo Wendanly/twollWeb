@@ -25,16 +25,6 @@
       <div v-loading="loading1" id="box1" class="box"></div>
       <div v-loading="loading2" id="box2" class="box"></div>
     </div>
-    <el-table height="100%" class="mytable" ref="table" :data="tableData" style="width: 100%">
-      <el-table-column
-        v-for="(item,index) in colList"
-        :key="index"
-        :prop="item.prop"
-        show-overflow-tooltip
-        :width="item.label.length >4?'140':''"
-        :label="item.label"
-      ></el-table-column>
-    </el-table>
   </div>
 </template>
 <script>
@@ -45,6 +35,8 @@ import {
 } from "@/api/customerCluster.js";
 import { groupByType } from "@/libs/tools.js";
 import * as echarts from "echarts";
+import Vue from "vue";
+import myTable from "@/views/sceneAnalyService/customerCluster/myTable";
 export default {
   name: "cell",
   components: {},
@@ -60,8 +52,6 @@ export default {
   },
   data() {
     return {
-      tableData: [],
-      colList: [],
       loading1: false,
       loading2: false,
       list: [],
@@ -78,7 +68,6 @@ export default {
       immediate: true
     }
   },
-  created() {},
   methods: {
     getAnalyzeIndexInfo(val) {
       GetAnalyzeIndexInfo({
@@ -97,7 +86,7 @@ export default {
                 if (res.DATA_INFO.length >= 2) {
                   this.checkList[0] = this.list[0].GROUP_NAME;
                   this.checkList[1] = this.list[1].GROUP_NAME;
-                  this.getSubjectAnalyzeJZList(this.checkList);
+                  this.getSubjectAnalyzeJZList(this.checkList); //默认选前两个
                 } else {
                   this.$message.warning("数据错误！");
                 }
@@ -110,8 +99,7 @@ export default {
         .catch(err => {});
     },
     setLoading(flag) {
-      this.loading1 = flag;
-      this.loading2 = flag;
+      this.loading1 = this.loading2 = flag;
     },
     getSubjectAnalyzeGCList(group_name) {
       this.setLoading(true);
@@ -202,8 +190,15 @@ export default {
               readOnly: true,
               lang: ["数据视图", "关闭", ""],
               optionToContent: opt => {
-                _this.transData(opt);
-                return _this.$refs.table.$el;
+                let obj = _this.transData(opt); //获得 el-table 所需的数据结构
+                console.log(myTable);
+                let tmpTable = Vue.extend(myTable);
+                console.log(tmpTable);
+                let instance = new tmpTable({
+                  propsData: obj //传参给子组件
+                }).$mount();
+                console.log(instance.$el);
+                return instance.$el; //返回dom
               }
             }
           }
@@ -236,7 +231,7 @@ export default {
         },
         series: seriesData
       };
-      console.log(option);
+      // console.log(option);
       //使用刚刚指定的配置项和数据项显示图表
       myChart.setOption(option, true);
       window.addEventListener("resize", function() {
@@ -254,7 +249,7 @@ export default {
         label: axisName
       });
       series.map(o => colList.push({ prop: o.name, label: o.name }));
-      console.log(colList); //列头
+      console.log(colList); //表头
       axisData.map((o, j) => {
         let obj = {};
         colList.map((m, n) =>
@@ -262,9 +257,14 @@ export default {
         );
         tableData.push(obj);
       });
-      this.colList = colList;
-      this.tableData = tableData;
-      console.log(tableData); //数据
+      console.log(
+        JSON.parse(JSON.stringify(colList)),
+        JSON.parse(JSON.stringify(tableData))
+      ); //列，数据
+      return {
+        colList,
+        tableData
+      };
     },
     getOption1(list) {
       let xAxisData = [];
