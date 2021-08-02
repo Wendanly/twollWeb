@@ -55,6 +55,33 @@
             </el-tooltip>
           </template>
         </el-table-column>
+        <el-table-column width="120" prop="ES_REL_LIST" label="分类体系">
+          <template slot-scope="scope">
+            <el-tooltip popper-class="classify" effect="dark" placement="left">
+              <div slot="content">
+                <el-table :data="scope.row.ES_REL_LIST" style="width: 100%">
+                  <el-table-column
+                    :disabled="true"
+                    width="130"
+                    show-overflow-tooltip
+                    prop="SCENE_ID"
+                    label="场景编码"
+                  ></el-table-column>
+                  <el-table-column
+                    :disabled="true"
+                    width="130"
+                    show-overflow-tooltip
+                    prop="SCENE_NAME"
+                    label="场景名称"
+                  ></el-table-column>
+                </el-table>
+              </div>
+              <span
+                style="font-weight: bold;"
+              >{{scope.row.ES_REL_LIST &&scope.row.ES_REL_LIST.length? scope.row.ES_REL_LIST[0].SCENE_NAME:''}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="REMARK" show-overflow-tooltip label="备注"></el-table-column>
         <el-table-column prop="OPER_ID" label="操作人"></el-table-column>
         <el-table-column prop="OPER_DATE" width="150" label="操作时间"></el-table-column>
@@ -347,5 +374,9 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.el-tooltip__popper.is-dark.classify {
+  padding: 0px;
+  border: 2px solid #9e9e9e;
+}
 </style>

@@ -13,6 +13,44 @@
           ref="formRules"
           :disabled="isShow"
         >
+          <div v-show="isShow">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="画像编码">
+                  <el-input size="mini" placeholder="画像编码" v-model.trim="formData.EIKON_ID"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="画像状态">
+                  <el-input size="mini" placeholder="画像状态" v-model.trim="formData.STATUS_NAME"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="建设主体">
+                  <el-input size="mini" placeholder="建设主体" v-model.trim="formData.IOP_TYPE_NAME"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="目录归属">
+                  <el-input size="mini" placeholder="目录归属" v-model.trim="formData.CATALOG"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="创建时间">
+                  <el-input size="mini" placeholder="创建时间" v-model.trim="formData.OPER_DATE"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="创建人">
+                  <el-input size="mini" placeholder="创建人" v-model.trim="formData.OPER_ID"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </div>
           <el-row>
             <el-col :span="24">
               <el-form-item label="分析对象" prop="frame_id">
@@ -148,7 +186,7 @@ import * as _ from "lodash";
 export default {
   name: "add",
   components: {
-    logicStep: () => import(/*webpackChunkName:'logic_step'*/"./logic_step")
+    logicStep: () => import(/*webpackChunkName:'logic_step'*/ "./logic_step")
   },
   data() {
     let _this = this;
@@ -247,7 +285,13 @@ export default {
         remark: "",
         data_cycle: "",
         begin_date: "",
-        end_date: ""
+        end_date: "",
+        EIKON_ID: "",
+        STATUS_NAME: "",
+        IOP_TYPE_NAME: "",
+        CATALOG: "",
+        OPER_DATE: "",
+        OPER_ID: ""
       },
       //表单校验
       formRules: {
@@ -348,8 +392,13 @@ export default {
             for (let i in this.formData) {
               this.formData[i] = tmpObj[i];
             }
+            for (let i in this.formData) {
+              res.DATA_INFO[i] && res.DATA_INFO[i] != ""
+                ? (this.formData[i] = res.DATA_INFO[i])
+                : "";
+            }
             this.$refs.logicStep.list = JSON.parse(tmpObj.ruleJson);
-            console.log(this.$refs.logicStep.list);
+            // console.log(this.$refs.logicStep.list);
           } else {
             this.$message.warning(res.MESSAGE);
           }
