@@ -13,23 +13,6 @@
 <script>
 export default {
   name: "myTable",
-  props: {
-    tableData: {
-      default() {
-        return [];
-      },
-      type: Array
-    },
-    colList: {
-      default() {
-        return [];
-      },
-      type: Array
-    }
-  },
-  data() {
-    return {};
-  }
 };
 </script>
 

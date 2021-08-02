@@ -59,7 +59,10 @@ export default {
       checkList: []
     };
   },
-
+  mounted() {
+    let el = this.$el;
+    console.log(el);
+  },
   watch: {
     value: {
       handler(val) {
@@ -195,8 +198,14 @@ export default {
                 let tmpTable = Vue.extend(myTable);
                 console.log(tmpTable);
                 let instance = new tmpTable({
-                  propsData: obj //传参给子组件
-                }).$mount();
+                  el: document.createElement("div"),
+                  data() {
+                    return {
+                      ...obj
+                    };
+                  }
+                  // propsData: obj //传参给子组件
+                });
                 console.log(instance.$el);
                 return instance.$el; //返回dom
               }
