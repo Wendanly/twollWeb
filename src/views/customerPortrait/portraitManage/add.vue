@@ -17,36 +17,36 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="画像编码">
-                  <el-input size="mini" placeholder="画像编码" v-model.trim="formData.EIKON_ID"></el-input>
+                  <el-input size="mini" placeholder="画像编码" v-model.trim="viewData.EIKON_ID"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="画像状态">
-                  <el-input size="mini" placeholder="画像状态" v-model.trim="formData.STATUS_NAME"></el-input>
+                  <el-input size="mini" placeholder="画像状态" v-model.trim="viewData.STATUS_NAME"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="12">
                 <el-form-item label="建设主体">
-                  <el-input size="mini" placeholder="建设主体" v-model.trim="formData.IOP_TYPE_NAME"></el-input>
+                  <el-input size="mini" placeholder="建设主体" v-model.trim="viewData.IOP_TYPE_NAME"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="目录归属">
-                  <el-input size="mini" placeholder="目录归属" v-model.trim="formData.CATALOG"></el-input>
+                <el-form-item label="画像目录">
+                  <el-input size="mini" placeholder="画像目录" v-model.trim="viewData.CATALOG"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="12">
                 <el-form-item label="创建时间">
-                  <el-input size="mini" placeholder="创建时间" v-model.trim="formData.OPER_DATE"></el-input>
+                  <el-input size="mini" placeholder="创建时间" v-model.trim="viewData.OPER_DATE"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="创建人">
-                  <el-input size="mini" placeholder="创建人" v-model.trim="formData.OPER_ID"></el-input>
+                  <el-input size="mini" placeholder="创建人" v-model.trim="viewData.OPER_ID"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -140,6 +140,13 @@
                   value-format="yyyyMM"
                   :picker-options="pickerOptions4"
                 ></el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="!isShow">
+            <el-col :span="24">
+              <el-form-item label="画像目录" prop="catalog">
+                <el-input size="mini" placeholder="画像目录" v-model.trim="formData.catalog"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -286,6 +293,9 @@ export default {
         data_cycle: "",
         begin_date: "",
         end_date: "",
+        catalog: ""
+      },
+      viewData: {
         EIKON_ID: "",
         STATUS_NAME: "",
         IOP_TYPE_NAME: "",
@@ -320,6 +330,13 @@ export default {
           {
             required: true,
             message: "此为必选项！",
+            trigger: ["blur"]
+          }
+        ],
+        catalog: [
+          {
+            required: true,
+            message: "此为必填项！",
             trigger: ["blur"]
           }
         ],
@@ -392,10 +409,8 @@ export default {
             for (let i in this.formData) {
               this.formData[i] = tmpObj[i];
             }
-            for (let i in this.formData) {
-              res.DATA_INFO[i] && res.DATA_INFO[i] != ""
-                ? (this.formData[i] = res.DATA_INFO[i])
-                : "";
+            for (let i in this.viewData) {
+              this.viewData[i] = res.DATA_INFO[i];
             }
             this.$refs.logicStep.list = JSON.parse(tmpObj.ruleJson);
             // console.log(this.$refs.logicStep.list);
@@ -459,6 +474,7 @@ export default {
           data_cycle: this.formData.data_cycle,
           begin_date: this.formData.begin_date,
           end_date: this.formData.end_date,
+          catalog: this.formData.catalog,
           ruleJson: JSON.stringify(this.$refs.logicStep.list), //json
           subjectRule: this.$refs.logicStep.codesText //下面显示的公式
         },
@@ -466,34 +482,33 @@ export default {
       };
       temp.edcSubject = JSON.stringify(temp.edcSubject);
       console.log(111, this.$refs.logicStep.codesText);
-      console.log(temp);
-      if (this.formData.dataCycle === 1) {
-        if (
-          new Date(dealDateStr(this.formData.beginDate)).getTime() <
-          dfs.subDays(new Date(), 1).getTime()
-        ) {
-          this.$message.warning("分群结果预计在数十分钟内计算完成");
-        } else {
-          let showResultDate = dfs.format(
-            dfs.addDays(new Date(dealDateStr(this.formData.beginDate)), 1),
-            "yyyy-MM-dd"
-          );
-          this.$message.warning(`分群结果预计在${showResultDate}前计算完成`);
-        }
-      } else if (this.formData.dataCycle === 2) {
-        if (
-          new Date(dealMonthStr(this.formData.beginDate)).getTime() <
-          dfs.subMonths(new Date(), 1).getTime()
-        ) {
-          this.$message.warning("分群结果预计在数十分钟计算完成");
-        } else {
-          let showResultDate = dfs.format(
-            dfs.addDays(new Date(dealDateStr(this.formData.beginDate)), 1),
-            "yyyy-MM"
-          );
-          this.$message.warning(`分群结果预计在${showResultDate}-10前计算完成`);
-        }
-      }
+      // if (this.formData.dataCycle === 1) {
+      //   if (
+      //     new Date(dealDateStr(this.formData.beginDate)).getTime() <
+      //     dfs.subDays(new Date(), 1).getTime()
+      //   ) {
+      //     this.$message.warning("分群结果预计在数十分钟内计算完成");
+      //   } else {
+      //     let showResultDate = dfs.format(
+      //       dfs.addDays(new Date(dealDateStr(this.formData.beginDate)), 1),
+      //       "yyyy-MM-dd"
+      //     );
+      //     this.$message.warning(`分群结果预计在${showResultDate}前计算完成`);
+      //   }
+      // } else if (this.formData.dataCycle === 2) {
+      //   if (
+      //     new Date(dealMonthStr(this.formData.beginDate)).getTime() <
+      //     dfs.subMonths(new Date(), 1).getTime()
+      //   ) {
+      //     this.$message.warning("分群结果预计在数十分钟计算完成");
+      //   } else {
+      //     let showResultDate = dfs.format(
+      //       dfs.addDays(new Date(dealDateStr(this.formData.beginDate)), 1),
+      //       "yyyy-MM"
+      //     );
+      //     this.$message.warning(`分群结果预计在${showResultDate}-10前计算完成`);
+      //   }
+      // }
       this.doSaveAsEikonInfo(temp);
     },
     doSaveAsEikonInfo(param) {
