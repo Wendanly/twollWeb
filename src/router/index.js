@@ -91,10 +91,9 @@ const routes = [{
   },
 
 ]
-
 const router = new VueRouter({
   mode: 'history',
-  base: '/twoll_web/',
+  base: process.env.BASE_URL,
   routes
 })
 
