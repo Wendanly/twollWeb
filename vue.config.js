@@ -1,4 +1,5 @@
 const TerserPlugin = require("terser-webpack-plugin");
+const BASEAPI = process.env.VUE_APP_BASEAPI
 module.exports = {
   // 项目部署的基础路径
   // 我们默认假设你的应用将会部署在域名的根部，
@@ -7,7 +8,7 @@ module.exports = {
   // 指定子路径。比如，如果你的应用部署在
   // https://www.foobar.com/my-app/
   // 那么将这个值改为 `/my-app/`
-  publicPath: '/twoll_web',
+  publicPath: '/twoll_web/',
   /*这个是我存放在github在线预览的Reader项目*/
 
   // 将构建好的文件输出到哪里（或者说将编译的文件）
@@ -110,8 +111,8 @@ module.exports = {
     port: 8080,
     // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli/cli-service.md#配置代理
     proxy: {
-      '/twoll/api': {
-        // target: 'http://192.168.1.66:18581',
+      [BASEAPI]: {
+        // target: 'http://192.168.1.67:18581',
         target: 'http://172.32.148.70:18581/',
         changeOrigin: true,
         secure: false,

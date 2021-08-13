@@ -157,15 +157,15 @@ import {
   DoSaveAsP2GPortrait,
   DoSaveAsP2GPortraitUp
 } from "@/api/portraitManage.js";
-// import check from '@/views/customerPortrait/portraitManage/check'
+import myMixins from '@/mixins/myMixins'
 export default {
   name: "portraitManage",
   components: {
     version: () => import(/* webpackChunkName: "version" */ "./version"),
     publish: () => import(/* webpackChunkName: "publish" */ "./publish"),
-    // check
     check: () => import(/* webpackChunkName: "check" */ "./check")
   },
+  mixins:[myMixins],
   data() {
     return {
       maxlength: 50,
@@ -361,16 +361,16 @@ export default {
           this.tableLoading = false;
         });
     },
-    handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`);
-      this.rows = val;
-      this.getList();
-    },
-    handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`);
-      this.page = val;
-      this.getList();
-    }
+    // handleSizeChange(val) {
+    //   // console.log(`每页 ${val} 条`);
+    //   this.rows = val;
+    //   this.getList();
+    // },
+    // handleCurrentChange(val) {
+    //   // console.log(`当前页: ${val}`);
+    //   this.page = val;
+    //   this.getList();
+    // }
   }
 };
 </script>

@@ -71,7 +71,13 @@ export default {
       } else {
         this.title = "编辑";
         this.formData.class_id = rowInfo.CLASS_ID;
-        this.formData.class_level = 2;
+        if (param == "edit") {
+          //一级编辑
+          this.formData.class_level = 1;
+        } else {
+           //二级新增与编辑
+          this.formData.class_level = 2;
+        }
         this.formData.per_class_id = rowInfo.CLASS_ID;
         //二级编辑
         if (param == "childrenEdit") {
