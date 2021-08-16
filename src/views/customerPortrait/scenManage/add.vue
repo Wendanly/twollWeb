@@ -59,6 +59,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            type="textarea"
+            size="mini"
+            placeholder="备注"
+            :maxlength="200"
+            :autosize="{ minRows: 2, maxRows: 5}"
+            v-model.trim="formData.remark"
+          ></el-input>
+        </el-form-item>
       </el-form>
     </div>
     <div slot="footer" style="text-align: center;">
@@ -84,7 +94,8 @@ export default {
       formData: {
         scene_name: "",
         class_id: "",
-        class_id2: ""
+        class_id2: "",
+        remark: ""
       },
       //表单校验
       formRules: {
@@ -101,14 +112,14 @@ export default {
             message: "此为必选项！",
             trigger: ["change"]
           }
+        ],
+        remark: [
+          {
+            required: true,
+            message: "此为必填项！",
+            trigger: ["blur"]
+          }
         ]
-        // class_id2: [
-        //   {
-        //     required: true,
-        //     message: "此为必选项！",
-        //     trigger: ["change"]
-        //   }
-        // ]
       },
       maxlength: 50,
       loading: false,
@@ -125,12 +136,14 @@ export default {
         this.formData.scene_id = null;
         this.formData.scene_name = "";
         this.formData.scene_type = "";
+        this.formData.remark = "";
         this.title = "新增";
       } else {
         this.title = "编辑";
         this.formData.scene_id = rowInfo.SCENE_ID;
         this.formData.scene_name = rowInfo.SCENE_NAME;
         this.formData.scene_type = rowInfo.SCENE_TYPE_NAME;
+        this.formData.remark = rowInfo.REMARK;
       }
       this.getSClassList();
       this.dialogFormVisible = true;
