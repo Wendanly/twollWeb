@@ -37,13 +37,16 @@
     </div>
     <div slot="footer" style="text-align: center;">
       <el-button size="mini" @click="close">取 消</el-button>
-      <el-button size="mini" type="primary" @click="doSaveAsP2GPortraitCheck" :loading="loading">保存</el-button>
+      <el-button size="mini" type="primary" @click="save" :loading="loading">保存</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 console.log("check");
-import { DoSaveAsP2GPortraitCheck } from "@/api/portraitManage.js";
+import {
+  DoSaveAsP2GPortraitCheck,
+  DoUpdateAsEikonStatus
+} from "@/api/portraitManage.js";
 export default {
   name: "check",
   components: {},
@@ -70,15 +73,50 @@ export default {
       loading: false
     };
   },
-  created() {
-    
-  },
+  created() {},
   inject: ["getParentList"],
   methods: {
-    open(rowInfo) {
+    open(rowInfo, status) {
       // console.log(rowInfo);
+      this.rowInfo = rowInfo;
       this.formData.eikon_id = rowInfo.EIKON_ID;
+      this.formData.status = status;
+      if (this.formData.status) {
+        this.title = "审批";
+      } else {
+        this.title = "互动审批";
+      }
       this.dialogFormVisible = true;
+    },
+    save() {
+      //this.formData.status 有值，则为审批。若无值，则为互动审批
+      if (this.formData.status) {
+        this.updateStatus("5");
+      } else {
+        this.doSaveAsP2GPortraitCheck();
+      }
+    },
+    updateStatus(status) {
+      this.$confirm(`[${this.rowInfo.EIKON_ID}]该画像确定是否审批？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        type: "warning"
+      })
+        .then(() => {
+          DoUpdateAsEikonStatus({
+            ...this.formData,
+            status
+          }).then(res => {
+            if (res.SUCCESS) {
+              this.close();
+              this.getParentList();
+              this.$message.success(res.MESSAGE);
+            } else return this.$message.warning(res.MESSAGE);
+          });
+        })
+        .catch(() => {});
     },
     doSaveAsP2GPortraitCheck() {
       this.$refs["formRules"].validate(formValid => {

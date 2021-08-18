@@ -90,7 +90,14 @@
             <el-button
               type="text"
               size="mini"
-              v-if="getStatus(scope,'上线_show')"
+              v-if="getStatus(scope,'审批_show')"
+              :disabled="getStatus(scope,'审批_dis')"
+              @click="goTo(scope,'审批')"
+            >审批</el-button>
+            <el-button
+              type="text"
+              size="mini"
+              v-else-if="getStatus(scope,'上线_show')"
               :disabled="getStatus(scope,'上线_dis')"
               @click="goTo(scope,'上线')"
             >上线</el-button>
@@ -129,10 +136,10 @@
             <el-button
               type="text"
               size="mini"
-              :disabled="getStatus(scope,'审批')"
+              :disabled="getStatus(scope,'互动审批')"
               v-else
-              @click="goTo(scope,'审批')"
-            >审批</el-button>
+              @click="goTo(scope,'互动审批')"
+            >互动审批</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -157,7 +164,7 @@ import {
   DoSaveAsP2GPortrait,
   DoSaveAsP2GPortraitUp
 } from "@/api/portraitManage.js";
-import myMixins from '@/mixins/myMixins'
+import myMixins from "@/mixins/myMixins";
 export default {
   name: "portraitManage",
   components: {
@@ -165,7 +172,7 @@ export default {
     publish: () => import(/* webpackChunkName: "publish" */ "./publish"),
     check: () => import(/* webpackChunkName: "check" */ "./check")
   },
-  mixins:[myMixins],
+  mixins: [myMixins],
   data() {
     return {
       maxlength: 50,
@@ -178,17 +185,18 @@ export default {
         eikon_name: ""
       },
       btn: {
-        // 上线: ["002"],
+        // 审批: ["002"],
+        // 上线: ["502"],
         // 下线: ["102", "112"],
         停用: ["102", "112"],
         编辑: ["002", "112", "012", "102"],
         // 规则: ["102", "002"],
-        发布: ["102"],
-        删除: ["202", "302", "311"]
+        发布: ["102", "112"],
+        删除: ["002", "202", "302", "312"]
 
         // 申请: ["101"],
         // 上报: ["102", "132"],
-        // 审批: ["112"]
+        // 互动审批: ["112"]
       }
     };
   },
@@ -206,11 +214,17 @@ export default {
       let status = row.STATUS + "" + row.IS_RELEASE + "" + row.IOP_TYPE;
       let status1 = row.STATUS + "" + row.CROSS_STATUS + "" + row.IOP_TYPE;
       //因为上线、下线用一个按钮显示，所以单独判断
-      if (name == "上线_show") {
+      if (name == "审批_show") {
         return status == "002" ? true : false;
       }
-      if (name == "上线_dis") {
+      if (name == "审批_dis") {
         return status == "002" ? false : true;
+      }
+      if (name == "上线_show") {
+        return status == "502" ? true : false;
+      }
+      if (name == "上线_dis") {
+        return status == "502" ? false : true;
       }
       if (name == "下线") {
         return status == "102" || status == "112" ? false : true;
@@ -229,7 +243,7 @@ export default {
         return status1 == "102" || status1 == "132" ? false : true;
       }
 
-      if (name == "审批") {
+      if (name == "互动审批") {
         return status1 == "112" ? false : true;
       }
       return this.btn[name].indexOf(status) > -1 ? false : true;
@@ -238,6 +252,9 @@ export default {
       let rowInfo = scope.row;
       if (name == "编辑") {
         this.edit(rowInfo);
+      } else if (name == "审批") {
+        this.$refs.check.open(rowInfo, "5"); //审批时传5，让其上线
+        // this.updateStatus(scope, "5", name);
       } else if (name == "上线") {
         this.updateStatus(scope, "1", name);
       } else if (name == "下线") {
@@ -256,7 +273,7 @@ export default {
         this.callback(scope, name, DoSaveAsP2GPortrait);
       } else if (name == "上报") {
         this.callback(scope, name, DoSaveAsP2GPortraitUp);
-      } else if (name == "审批") {
+      } else if (name == "互动审批") {
         this.$refs.check.open(rowInfo);
       }
     },
@@ -360,7 +377,7 @@ export default {
         .catch(err => {
           this.tableLoading = false;
         });
-    },
+    }
     // handleSizeChange(val) {
     //   // console.log(`每页 ${val} 条`);
     //   this.rows = val;

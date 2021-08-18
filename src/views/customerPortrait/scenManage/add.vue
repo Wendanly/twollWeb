@@ -27,7 +27,7 @@
         </el-form-item>
         <el-form-item label="一级场景分类" prop="class_id">
           <el-select
-            @change="getSClassList2"
+            @change="getSClassList2($event,true)"
             class="fuzzy-query"
             style="width:100%"
             size="mini"
@@ -62,10 +62,9 @@
         <el-form-item label="备注" prop="remark">
           <el-input
             type="textarea"
-            size="mini"
             placeholder="备注"
+            :autosize="{ minRows: 2, maxRows: 6}"
             :maxlength="200"
-            :autosize="{ minRows: 2, maxRows: 5}"
             v-model.trim="formData.remark"
           ></el-input>
         </el-form-item>
@@ -84,7 +83,7 @@ import {
   DoSaveAsSceneInfo
 } from "@/api/scenManage.js";
 export default {
-  name: "add",
+  name: "scenManageAdd",
   components: {},
   data() {
     return {
@@ -132,6 +131,8 @@ export default {
   created() {},
   methods: {
     open(param, rowInfo) {
+      this.rowInfo = rowInfo;
+      this.isAdd = param;
       if (param == "add") {
         this.formData.scene_id = null;
         this.formData.scene_name = "";
@@ -154,7 +155,9 @@ export default {
           if (res.SUCCESS) {
             if (res.DATA_LIST.length) {
               this.sceneClassList = res.DATA_LIST;
-              this.formData.class_id = this.sceneClassList[0].CLASS_ID;
+              this.isAdd == "add"
+                ? (this.formData.class_id = this.sceneClassList[0].CLASS_ID)
+                : (this.formData.class_id = this.rowInfo.CLASS_ID);
               this.getSClassList2(this.formData.class_id);
             } else {
               this.$message.warning("数据为空！");
@@ -165,17 +168,17 @@ export default {
         })
         .catch(err => {});
     },
-    getSClassList2(classid) {
+    getSClassList2(classid, fromChange) {
       GetSClassList2({
         per_class_id: classid
       })
         .then(res => {
-          console.log(res);
-
           if (res.SUCCESS) {
             if (res.DATA_LIST.length) {
               this.sceneClassList2 = res.DATA_LIST;
-              this.formData.class_id2 = this.sceneClassList2[0].CLASS_ID;
+              this.isAdd == "add" || fromChange == true
+                ? (this.formData.class_id2 = this.sceneClassList2[0].CLASS_ID)
+                : (this.formData.class_id2 = this.rowInfo.CLASS_ID2);
             } else {
               this.formData.class_id2 = "";
               this.$message.warning("二级场景分类为空！");
@@ -215,7 +218,8 @@ export default {
       this.formData = {
         scene_name: "",
         class_id: "",
-        class_id2: ""
+        class_id2: "",
+        remark: ""
       };
     }
   }

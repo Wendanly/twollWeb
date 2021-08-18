@@ -65,7 +65,11 @@
         <el-table-column prop="SCENE_ID" label="场景编码"></el-table-column>
         <el-table-column prop="SCENE_NAME" show-overflow-tooltip label="场景名称"></el-table-column>
         <el-table-column prop="STATUS_NAME" label="场景状态"></el-table-column>
-        <el-table-column prop="SCENE_HEAT" label="场景热度"></el-table-column>
+        <el-table-column prop="SCENE_HEAT" width="150" sortable label="场景热度"></el-table-column>
+        <el-table-column prop="TEMP_ID2" width="150" label="优秀活动编码"></el-table-column>
+        <el-table-column prop="TEMP_ID3" width="150" label="优秀活动名称"></el-table-column>
+        <el-table-column prop="TEMP_ID4"  width="150" sortable label="画像效果"></el-table-column>
+        <el-table-column prop="TEMP_ID5" width="150" label="热门画像推荐"></el-table-column>
         <el-table-column prop="IOP_TYPE_NAME" label="建设主体"></el-table-column>
         <el-table-column prop="CLASS_NAME" width="150" show-overflow-tooltip label="一级场景分类"></el-table-column>
         <el-table-column prop="CLASS_NAME2" width="150" show-overflow-tooltip label="二级场景分类"></el-table-column>
