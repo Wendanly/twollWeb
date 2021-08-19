@@ -29,22 +29,22 @@
         <el-table-column prop="RELEASE_NAME" label="发布状态"></el-table-column>
         <el-table-column width="130" prop="COL23" sortable>
           <template slot="header" slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="正序倒序" placement="right">
+            <el-tooltip class="item" effect="dark" content="提醒人数/客群规模" placement="right">
               <span>营销接触率</span>
             </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column width="130" prop="COL29" sortable>
           <template slot="header" slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="正序倒序" placement="right">
+            <el-tooltip class="item" effect="dark" content="成功办理人数/客群规模" placement="right">
               <span>营销成功率</span>
             </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column width="120" prop="COL5" sortable>
           <template slot="header" slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="正序倒序" placement="right">
-              <span>调用次数</span>
+            <el-tooltip class="item" effect="dark" content="调用次数" placement="right">
+              <span>热度</span>
             </el-tooltip>
           </template>
         </el-table-column>

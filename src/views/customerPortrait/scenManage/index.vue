@@ -62,22 +62,23 @@
         v-loading="tableLoading"
         :height="`calc(100vh - ${$TABLEHEIGHT}px)`"
       >
-        <el-table-column prop="SCENE_ID" label="场景编码"></el-table-column>
+        <el-table-column prop="SCENE_ID" show-overflow-tooltip label="场景编码"></el-table-column>
         <el-table-column prop="SCENE_NAME" show-overflow-tooltip label="场景名称"></el-table-column>
         <el-table-column prop="STATUS_NAME" label="场景状态"></el-table-column>
         <el-table-column prop="SCENE_HEAT" width="150" sortable label="场景热度"></el-table-column>
-        <el-table-column prop="TEMP_ID2" width="150" label="优秀活动编码"></el-table-column>
-        <el-table-column prop="TEMP_ID3" width="150" label="优秀活动名称"></el-table-column>
-        <el-table-column prop="TEMP_ID4"  width="150" sortable label="画像效果"></el-table-column>
-        <el-table-column prop="TEMP_ID5" width="150" label="热门画像推荐"></el-table-column>
-        <el-table-column prop="IOP_TYPE_NAME" label="建设主体"></el-table-column>
+        <el-table-column prop="TEMP_ID2" show-overflow-tooltip width="150" label="优秀活动编码"></el-table-column>
+        <el-table-column prop="TEMP_ID3" show-overflow-tooltip width="150" label="优秀活动名称"></el-table-column>
+        <el-table-column prop="TEMP_ID4" width="150" sortable label="画像效果"></el-table-column>
+        <el-table-column prop="TEMP_ID5" show-overflow-tooltip width="150" label="热门画像推荐"></el-table-column>
+        <el-table-column prop="IOP_TYPE_NAME" show-overflow-tooltip label="建设主体"></el-table-column>
         <el-table-column prop="CLASS_NAME" width="150" show-overflow-tooltip label="一级场景分类"></el-table-column>
         <el-table-column prop="CLASS_NAME2" width="150" show-overflow-tooltip label="二级场景分类"></el-table-column>
         <el-table-column prop="OPER_DATE" width="150" label="创建时间"></el-table-column>
-        <el-table-column prop="OPER_ID" label="操作人"></el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column prop="OPER_ID" label="操作人" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作" width="220">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="edit(scope)">编辑</el-button>
+            <el-button type="text" size="mini" @click="copy(scope)">复制</el-button>
             <el-button type="text" size="mini" @click="showInfo(scope)">详情</el-button>
             <el-button type="text" size="mini" @click="updateStatus(scope)">{{getStatus(scope)}}</el-button>
             <el-button type="text" size="mini" v-if="scope.row.STATUS != '1'" @click="del(scope)">删除</el-button>
@@ -154,6 +155,9 @@ export default {
     },
     edit(rowInfo) {
       this.$refs.add.open("edit", rowInfo.row);
+    },
+    copy(rowInfo) {
+      this.$refs.add.open("copy", rowInfo.row);
     },
     showInfo(rowInfo) {
       this.$refs.show.open(rowInfo.row);

@@ -139,6 +139,12 @@ export default {
         this.formData.scene_type = "";
         this.formData.remark = "";
         this.title = "新增";
+      } else if (param == "copy") {
+        this.title = "复制";
+        this.formData.scene_id = null;
+        this.formData.scene_name = rowInfo.SCENE_NAME;
+        this.formData.scene_type = rowInfo.SCENE_TYPE_NAME;
+        this.formData.remark = rowInfo.REMARK;
       } else {
         this.title = "编辑";
         this.formData.scene_id = rowInfo.SCENE_ID;
